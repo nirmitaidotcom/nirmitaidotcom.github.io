@@ -78,10 +78,13 @@
     }
   </style>
 </head>
-<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-pastel-sageSoft selection:text-oat-900">
+<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-pastel-sageSoft selection:text-oat-900 relative">
+
+  <!-- Neural Network Breathing Canvas -->
+  <canvas id="neural-canvas" class="fixed inset-0 pointer-events-none z-0 w-full h-full"></canvas>
 
   <!-- Header -->
-  <header class="border-b border-oat-200 bg-oat-50/90 backdrop-blur-sm sticky top-0 z-40">
+  <header class="border-b border-oat-200 bg-oat-50/90 backdrop-blur-sm sticky top-0 z-40 relative">
     <div class="max-w-5xl mx-auto px-6 h-18 py-4 flex items-center justify-between">
       
       <a href="#" class="flex items-center gap-2.5">
@@ -104,7 +107,7 @@
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-5xl mx-auto px-6 py-16 space-y-20 flex-1">
+  <main class="max-w-5xl mx-auto px-6 py-16 space-y-20 flex-1 relative z-10">
 
     <!-- Hero Section -->
     <section class="space-y-6 pt-4">
@@ -299,7 +302,7 @@
   </main>
 
   <!-- Minimal Footer -->
-  <footer class="border-t border-oat-200 py-8 px-6 bg-oat-50 text-xs font-mono text-oat-500">
+  <footer class="border-t border-oat-200 py-8 px-6 bg-oat-50 text-xs font-mono text-oat-500 relative z-10">
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <span class="font-display font-bold text-oat-950">Nirmit AI</span>
@@ -311,6 +314,433 @@
       </div>
     </div>
   </footer>
+
+  <!-- Neural Network, Brain Wireframe & Robotics Kinematic Animation Engine -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('neural-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height, dpr;
+      let nodes = [];
+      let pulses = [];
+      let brainPoints = [];
+      let brainEdges = [];
+      let animId;
+
+      // Sober pastel palette matching the site
+      const palette = [
+        { r: 109, g: 139, b: 116 }, // Sage
+        { r: 139, g: 128, b: 166 }, // Lavender
+        { r: 106, g: 142, b: 158 }, // Ice
+        { r: 197, g: 126, b: 101 }  // Clay
+      ];
+
+      // Generate 3D Brain Hemisphere Wireframe Model
+      function initBrainModel() {
+        brainPoints = [];
+        brainEdges = [];
+
+        // Two lobes: -1 (left), 1 (right)
+        for (let lobe = -1; lobe <= 1; lobe += 2) {
+          for (let u = 0.2; u < Math.PI - 0.2; u += 0.38) {
+            for (let v = 0; v < Math.PI * 2; v += 0.62) {
+              // Cortex profile with natural anatomical folds
+              const rBase = 46 + 7 * Math.sin(u * 4) * Math.cos(v * 3);
+              const x = lobe * (16 + rBase * 0.82 * Math.sin(u) * Math.cos(v));
+              const y = -rBase * 1.08 * Math.cos(u);
+              const z = rBase * 0.72 * Math.sin(u) * Math.sin(v);
+
+              brainPoints.push({
+                ox: x, oy: y, oz: z,
+                lobe,
+                pulseOffset: Math.random() * Math.PI * 2
+              });
+            }
+          }
+        }
+
+        // Connect nearest neighbors within same lobe
+        for (let i = 0; i < brainPoints.length; i++) {
+          let connections = 0;
+          for (let j = i + 1; j < brainPoints.length; j++) {
+            if (brainPoints[i].lobe !== brainPoints[j].lobe) continue;
+            const dx = brainPoints[i].ox - brainPoints[j].ox;
+            const dy = brainPoints[i].oy - brainPoints[j].oy;
+            const dz = brainPoints[i].oz - brainPoints[j].oz;
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (dist < 26 && connections < 3) {
+              brainEdges.push([i, j]);
+              connections++;
+            }
+          }
+        }
+      }
+
+      initBrainModel();
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+        initNodes();
+      }
+
+      function initNodes() {
+        nodes = [];
+        pulses = [];
+        const count = Math.min(55, Math.max(26, Math.floor(width / 28)));
+
+        for (let i = 0; i < count; i++) {
+          const rand = Math.random();
+          let x;
+          if (rand < 0.42) {
+            x = Math.random() * (width * 0.34);
+          } else if (rand < 0.84) {
+            x = width * 0.66 + Math.random() * (width * 0.34);
+          } else {
+            x = width * 0.34 + Math.random() * (width * 0.32);
+          }
+
+          nodes.push({
+            x,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.18,
+            vy: (Math.random() - 0.5) * 0.18,
+            radius: 1.4 + Math.random() * 1.4,
+            phase: Math.random() * Math.PI * 2,
+            breathSpeed: 0.0012 + Math.random() * 0.0008,
+            color: palette[Math.floor(Math.random() * palette.length)]
+          });
+        }
+      }
+
+      function spawnPulse() {
+        if (nodes.length < 2 || pulses.length > 5) return;
+        const i = Math.floor(Math.random() * nodes.length);
+        for (let j = 0; j < nodes.length; j++) {
+          if (i === j) continue;
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120 && dist > 35) {
+            pulses.push({
+              from: nodes[i],
+              to: nodes[j],
+              progress: 0,
+              speed: 0.008 + Math.random() * 0.006,
+              color: nodes[i].color
+            });
+            break;
+          }
+        }
+      }
+
+      setInterval(spawnPulse, 1800);
+
+      let lastTime = performance.now();
+
+      function draw(time) {
+        ctx.clearRect(0, 0, width, height);
+
+        const globalBreath = 1 + 0.22 * Math.sin(time * 0.0009);
+        const maxDist = 115 * globalBreath;
+
+        // -------------------------------------------------------------
+        // 1. Draw 3D Breathing Brain Wireframe (Left Flank)
+        // -------------------------------------------------------------
+        const brainCenterX = width > 1024 ? Math.max(120, width * 0.13) : Math.max(90, width * 0.15);
+        const brainCenterY = Math.min(height * 0.42, 380);
+        const brainScale = (width > 1024 ? 1.05 : 0.75) * (1 + 0.08 * Math.sin(time * 0.0012));
+
+        // Subtle 3D rotation angles
+        const rotY = time * 0.00045;
+        const rotX = 0.22 + 0.12 * Math.sin(time * 0.00035);
+
+        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+
+        // Project 3D points to 2D
+        const projected = [];
+        for (let i = 0; i < brainPoints.length; i++) {
+          const pt = brainPoints[i];
+          // Rotate Y
+          const x1 = pt.ox * cosY + pt.oz * sinY;
+          const z1 = -pt.ox * sinY + pt.oz * cosY;
+          // Rotate X
+          const y2 = pt.oy * cosX - z1 * sinX;
+          const z2 = pt.oy * sinX + z1 * cosX;
+
+          const fov = 340;
+          const perspective = fov / (fov + z2);
+          const px = brainCenterX + x1 * brainScale * perspective;
+          const py = brainCenterY + y2 * brainScale * perspective;
+
+          projected.push({
+            x: px,
+            y: py,
+            depth: z2,
+            lobe: pt.lobe,
+            phase: pt.pulseOffset
+          });
+        }
+
+        // Draw Brain Edges
+        ctx.lineWidth = 0.75;
+        for (let k = 0; k < brainEdges.length; k++) {
+          const [i, j] = brainEdges[k];
+          const p1 = projected[i];
+          const p2 = projected[j];
+
+          const edgeAlpha = Math.max(0.04, Math.min(0.24, 0.14 + (p1.depth + p2.depth) * 0.0015)) * globalBreath;
+          ctx.beginPath();
+          ctx.moveTo(p1.x, p1.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.strokeStyle = `rgba(139, 128, 166, ${edgeAlpha.toFixed(3)})`;
+          ctx.stroke();
+        }
+
+        // Draw Brain Synapse Nodes
+        for (let i = 0; i < projected.length; i++) {
+          const p = projected[i];
+          const synBreath = Math.sin(time * 0.0018 + p.phase);
+          const nodeRadius = (1.2 + 0.8 * synBreath);
+          const alpha = (0.28 + 0.28 * synBreath);
+
+          // Alternating pastel sage and lavender
+          const col = p.lobe === -1 ? '109, 139, 116' : '139, 128, 166';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.6, nodeRadius), 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${col}, ${alpha.toFixed(3)})`;
+          ctx.fill();
+        }
+
+        // Brain Technical Label
+        ctx.font = "9px 'JetBrains Mono', monospace";
+        ctx.fillStyle = "rgba(140, 125, 111, 0.45)";
+        ctx.textAlign = "center";
+        ctx.fillText("NEURAL CORTEX // WIREFRAME", brainCenterX, brainCenterY + 88 * brainScale);
+
+        // -------------------------------------------------------------
+        // 2. Draw Kinematic Robotic Manipulator Wireframe (Right Flank)
+        // -------------------------------------------------------------
+        const robX = width > 1024 ? Math.min(width - 120, width * 0.87) : Math.min(width - 80, width * 0.85);
+        const robY = Math.min(height * 0.42, 380);
+        const robScale = width > 1024 ? 1.05 : 0.75;
+
+        // Kinematic joint rotations cycling smoothly
+        const theta1 = -0.45 + 0.18 * Math.sin(time * 0.0008); // Shoulder
+        const theta2 = 0.85 + 0.24 * Math.cos(time * 0.0006);  // Elbow
+        const theta3 = -0.52 + 0.16 * Math.sin(time * 0.001);  // Wrist
+
+        const L1 = 55 * robScale;
+        const L2 = 50 * robScale;
+        const L3 = 24 * robScale;
+
+        // Base Pedestal
+        ctx.strokeStyle = "rgba(106, 142, 158, 0.25)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(robX, robY + 65 * robScale, 36 * robScale, 10 * robScale, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.ellipse(robX, robY + 62 * robScale, 26 * robScale, 7 * robScale, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Joint 0 (Base Center)
+        const p0 = { x: robX, y: robY + 58 * robScale };
+
+        // Joint 1 (Shoulder)
+        const p1 = { x: p0.x, y: p0.y - 20 * robScale };
+
+        // Joint 2 (Elbow)
+        const p2 = {
+          x: p1.x + L1 * Math.sin(theta1),
+          y: p1.y - L1 * Math.cos(theta1)
+        };
+
+        // Joint 3 (Wrist)
+        const p3 = {
+          x: p2.x + L2 * Math.sin(theta1 + theta2),
+          y: p2.y - L2 * Math.cos(theta1 + theta2)
+        };
+
+        // End-Effector Tip (Gripper)
+        const pEnd = {
+          x: p3.x + L3 * Math.sin(theta1 + theta2 + theta3),
+          y: p3.y - L3 * Math.cos(theta1 + theta2 + theta3)
+        };
+
+        // Robotic Truss Links (Double hairline with diagonal bracing)
+        function drawRoboticTruss(a, b, widthOffset, color) {
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          const nx = (-dy / len) * widthOffset;
+          const ny = (dx / len) * widthOffset;
+
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 0.9;
+          ctx.beginPath();
+          ctx.moveTo(a.x + nx, a.y + ny);
+          ctx.lineTo(b.x + nx, b.y + ny);
+          ctx.moveTo(a.x - nx, a.y - ny);
+          ctx.lineTo(b.x - nx, b.y - ny);
+          // Diagonal brace
+          ctx.moveTo(a.x + nx, a.y + ny);
+          ctx.lineTo(b.x - nx, b.y - ny);
+          ctx.stroke();
+        }
+
+        // Draw Base pillar
+        ctx.strokeStyle = "rgba(106, 142, 158, 0.35)";
+        ctx.beginPath();
+        ctx.moveTo(p0.x - 8 * robScale, p0.y);
+        ctx.lineTo(p1.x - 6 * robScale, p1.y);
+        ctx.moveTo(p0.x + 8 * robScale, p0.y);
+        ctx.lineTo(p1.x + 6 * robScale, p1.y);
+        ctx.stroke();
+
+        // Draw Link 1 & Link 2
+        drawRoboticTruss(p1, p2, 4.5 * robScale, "rgba(106, 142, 158, 0.3)");
+        drawRoboticTruss(p2, p3, 3.5 * robScale, "rgba(197, 126, 101, 0.3)");
+
+        // Draw Wrist & Gripper Fingers
+        ctx.strokeStyle = "rgba(106, 142, 158, 0.45)";
+        ctx.beginPath();
+        ctx.moveTo(p3.x, p3.y);
+        ctx.lineTo(pEnd.x, pEnd.y);
+        ctx.stroke();
+
+        // Gripper Claws (End Effector)
+        const clawAngle = 0.45 + 0.15 * Math.sin(time * 0.002);
+        const clawLen = 10 * robScale;
+        const clawBaseAngle = Math.atan2(pEnd.y - p3.y, pEnd.x - p3.x);
+
+        ctx.strokeStyle = "rgba(109, 139, 116, 0.6)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(pEnd.x, pEnd.y);
+        ctx.lineTo(pEnd.x + clawLen * Math.cos(clawBaseAngle - clawAngle), pEnd.y + clawLen * Math.sin(clawBaseAngle - clawAngle));
+        ctx.moveTo(pEnd.x, pEnd.y);
+        ctx.lineTo(pEnd.x + clawLen * Math.cos(clawBaseAngle + clawAngle), pEnd.y + clawLen * Math.sin(clawBaseAngle + clawAngle));
+        ctx.stroke();
+
+        // Joint Pivot Rings & Labels
+        [p1, p2, p3].forEach((joint, idx) => {
+          ctx.beginPath();
+          ctx.arc(joint.x, joint.y, 3.5 * robScale, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(250, 247, 242, 0.9)";
+          ctx.fill();
+          ctx.strokeStyle = idx === 1 ? "rgba(197, 126, 101, 0.7)" : "rgba(106, 142, 158, 0.7)";
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+        });
+
+        // Robot Technical Label
+        ctx.font = "9px 'JetBrains Mono', monospace";
+        ctx.fillStyle = "rgba(140, 125, 111, 0.45)";
+        ctx.textAlign = "center";
+        ctx.fillText("ROBOTIC KINEMATICS // 6-DoF", robX, robY + 88 * robScale);
+
+        // -------------------------------------------------------------
+        // 3. Draw Background Neural Network & Connecting Fibers
+        // -------------------------------------------------------------
+        for (let i = 0; i < nodes.length; i++) {
+          const a = nodes[i];
+          for (let j = i + 1; j < nodes.length; j++) {
+            const b = nodes[j];
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < maxDist) {
+              const alpha = (1 - dist / maxDist) * 0.2 * globalBreath;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = `rgba(140, 125, 111, ${alpha.toFixed(3)})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Draw Synaptic Impulses
+        for (let p = pulses.length - 1; p >= 0; p--) {
+          const pulse = pulses[p];
+          pulse.progress += pulse.speed;
+          if (pulse.progress >= 1) {
+            pulses.splice(p, 1);
+            continue;
+          }
+          const px = pulse.from.x + (pulse.to.x - pulse.from.x) * pulse.progress;
+          const py = pulse.from.y + (pulse.to.y - pulse.from.y) * pulse.progress;
+          const { r, g, b } = pulse.color;
+
+          ctx.beginPath();
+          ctx.arc(px, py, 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.85)`;
+          ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
+          ctx.shadowBlur = 6;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
+
+        // Draw Neural Nodes
+        for (let i = 0; i < nodes.length; i++) {
+          const n = nodes[i];
+          n.x += n.vx;
+          n.y += n.vy;
+
+          if (n.x < -20) n.x = width + 20;
+          if (n.x > width + 20) n.x = -20;
+          if (n.y < -20) n.y = height + 20;
+          if (n.y > height + 20) n.y = -20;
+
+          const localBreath = Math.sin(time * n.breathSpeed + n.phase);
+          const currentRadius = Math.max(0.8, n.radius * (1 + 0.3 * localBreath));
+          const nodeAlpha = 0.32 + 0.28 * localBreath;
+          const { r, g, b } = n.color;
+
+          // Glowing halo
+          const haloRadius = currentRadius * 3.2;
+          const gradient = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, haloRadius);
+          gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${(nodeAlpha * 0.35).toFixed(3)})`);
+          gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, haloRadius, 0, Math.PI * 2);
+          ctx.fillStyle = gradient;
+          ctx.fill();
+
+          // Node core
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, currentRadius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${nodeAlpha.toFixed(3)})`;
+          ctx.fill();
+        }
+
+        animId = requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize, { passive: true });
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          cancelAnimationFrame(animId);
+        } else {
+          lastTime = performance.now();
+          animId = requestAnimationFrame(draw);
+        }
+      });
+
+      resize();
+      animId = requestAnimationFrame(draw);
+    })();
+  </script>
 
 </body>
 </html>
