@@ -377,7 +377,7 @@
 
   <!-- Minimal Footer -->
   <footer class="border-t border-oat-200 py-6 sm:py-8 px-4 sm:px-6 bg-oat-50 text-xs font-mono text-oat-500 relative z-10">
-    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 text-left">
       <div class="flex items-center gap-2">
         <span class="font-display font-bold text-oat-950">Nirmit AI</span>
         <span>·</span>
@@ -392,7 +392,7 @@
     </div>
   </footer>
 
-  <!-- Neural Network, Brain Wireframe & Robotics Kinematic Animation Engine -->
+  <!-- Neural Network & Biomimetic Animaloid Companion Robot Animation Engine -->
   <script>
     (function () {
       const canvas = document.getElementById('neural-canvas');
@@ -401,8 +401,6 @@
       let width, height, dpr;
       let nodes = [];
       let pulses = [];
-      let brainPoints = [];
-      let brainEdges = [];
       let animId;
 
       // Sober pastel palette matching the site
@@ -412,49 +410,6 @@
         { r: 106, g: 142, b: 158 }, // Ice
         { r: 197, g: 126, b: 101 }  // Clay
       ];
-
-      // Generate 3D Brain Hemisphere Wireframe Model
-      function initBrainModel() {
-        brainPoints = [];
-        brainEdges = [];
-
-        // Two lobes: -1 (left), 1 (right)
-        for (let lobe = -1; lobe <= 1; lobe += 2) {
-          for (let u = 0.2; u < Math.PI - 0.2; u += 0.38) {
-            for (let v = 0; v < Math.PI * 2; v += 0.62) {
-              // Cortex profile with natural anatomical folds
-              const rBase = 46 + 7 * Math.sin(u * 4) * Math.cos(v * 3);
-              const x = lobe * (16 + rBase * 0.82 * Math.sin(u) * Math.cos(v));
-              const y = -rBase * 1.08 * Math.cos(u);
-              const z = rBase * 0.72 * Math.sin(u) * Math.sin(v);
-
-              brainPoints.push({
-                ox: x, oy: y, oz: z,
-                lobe,
-                pulseOffset: Math.random() * Math.PI * 2
-              });
-            }
-          }
-        }
-
-        // Connect nearest neighbors within same lobe
-        for (let i = 0; i < brainPoints.length; i++) {
-          let connections = 0;
-          for (let j = i + 1; j < brainPoints.length; j++) {
-            if (brainPoints[i].lobe !== brainPoints[j].lobe) continue;
-            const dx = brainPoints[i].ox - brainPoints[j].ox;
-            const dy = brainPoints[i].oy - brainPoints[j].oy;
-            const dz = brainPoints[i].oz - brainPoints[j].oz;
-            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            if (dist < 26 && connections < 3) {
-              brainEdges.push([i, j]);
-              connections++;
-            }
-          }
-        }
-      }
-
-      initBrainModel();
 
       function resize() {
         dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -470,25 +425,21 @@
         nodes = [];
         pulses = [];
         const isMobile = width < 768;
-        const count = isMobile ? 22 : Math.min(55, Math.max(26, Math.floor(width / 28)));
+        const count = isMobile ? 18 : 34;
 
+        // Concentrate nodes on the RIGHT side of the screen
         for (let i = 0; i < count; i++) {
-          const rand = Math.random();
-          let x;
-          if (rand < 0.42) {
-            x = Math.random() * (width * 0.34);
-          } else if (rand < 0.84) {
-            x = width * 0.66 + Math.random() * (width * 0.34);
-          } else {
-            x = width * 0.34 + Math.random() * (width * 0.32);
-          }
+          const minX = isMobile ? width * 0.40 : width * 0.52;
+          const maxX = width * 0.96;
+          const x = minX + Math.random() * (maxX - minX);
+          const y = 30 + Math.random() * Math.min(height * 0.85, 580);
 
           nodes.push({
             x,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.18,
-            vy: (Math.random() - 0.5) * 0.18,
-            radius: 1.4 + Math.random() * 1.4,
+            y,
+            vx: (Math.random() - 0.5) * 0.16,
+            vy: (Math.random() - 0.5) * 0.16,
+            radius: 1.4 + Math.random() * 1.5,
             phase: Math.random() * Math.PI * 2,
             breathSpeed: 0.0012 + Math.random() * 0.0008,
             color: palette[Math.floor(Math.random() * palette.length)]
@@ -497,14 +448,14 @@
       }
 
       function spawnPulse() {
-        if (nodes.length < 2 || pulses.length > 5) return;
+        if (nodes.length < 2 || pulses.length > 6) return;
         const i = Math.floor(Math.random() * nodes.length);
         for (let j = 0; j < nodes.length; j++) {
           if (i === j) continue;
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120 && dist > 35) {
+          if (dist < 130 && dist > 35) {
             pulses.push({
               from: nodes[i],
               to: nodes[j],
@@ -517,7 +468,254 @@
         }
       }
 
-      setInterval(spawnPulse, 1800);
+      setInterval(spawnPulse, 1600);
+
+      // Biomimetic Animaloid Companion Robot Drawing (Personal Assistance Bot)
+      function drawAnimaloidBot(cx, cy, s, alpha, time) {
+        if (alpha <= 0.02) return null;
+
+        // Natural kinematic breathing and weight cycles
+        const breath = Math.sin(time * 0.0018);
+        const cycle = time * 0.0022;
+        const bodyBob = 2.4 * breath;
+        const groundY = cy + 58 * s;
+
+        // Architectural pastel colors
+        const cPlate = `rgba(244, 239, 234, ${(0.92 * alpha).toFixed(3)})`;
+        const cStroke = `rgba(31, 27, 24, ${(0.75 * alpha).toFixed(3)})`;
+        const cHairline = `rgba(140, 125, 111, ${(0.45 * alpha).toFixed(3)})`;
+        const cIce = `rgba(106, 142, 158, ${(0.85 * alpha).toFixed(3)})`;
+        const cSage = `rgba(109, 139, 116, ${(0.85 * alpha).toFixed(3)})`;
+        const cClay = `rgba(197, 126, 101, ${(0.85 * alpha).toFixed(3)})`;
+        const cJoint = `rgba(250, 247, 242, ${(0.95 * alpha).toFixed(3)})`;
+
+        // Ambient ground shadow under paws
+        ctx.beginPath();
+        ctx.ellipse(cx + 4 * s, groundY + 2 * s, 64 * s, 8 * s, 0, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(140, 125, 111, ${(0.12 * alpha).toFixed(3)})`;
+        ctx.fill();
+
+        // Key anatomical body nodes
+        const hipX = cx - 36 * s;
+        const hipY = cy - 2 * s + bodyBob;
+        const shoulderX = cx + 38 * s;
+        const shoulderY = cy - 6 * s + bodyBob;
+        const midSpineX = cx + 2 * s;
+        const midSpineY = cy - 8 * s + bodyBob * 0.8;
+
+        // Quadruped limb rendering function
+        function drawLeg(baseX, baseY, isFrontLeg, isFar, phase) {
+          const strokeCol = isFar ? `rgba(140, 125, 111, ${(0.5 * alpha).toFixed(3)})` : cStroke;
+          const accentCol = isFar ? `rgba(140, 125, 111, ${(0.35 * alpha).toFixed(3)})` : (isFrontLeg ? cIce : cClay);
+          const jointFill = isFar ? `rgba(235, 228, 220, ${(0.8 * alpha).toFixed(3)})` : cJoint;
+
+          let kneeX, kneeY, ankleX, ankleY, pawX, pawY;
+
+          if (isFrontLeg) {
+            // Front leg: shoulder -> elbow (backward) -> wrist (forward) -> paw
+            kneeX = baseX - 12 * s + 3 * Math.sin(cycle + phase);
+            kneeY = baseY + 26 * s + 1.2 * breath;
+            ankleX = baseX + 4 * s + 2 * Math.sin(cycle + phase);
+            ankleY = baseY + 46 * s;
+            pawX = baseX + 8 * s;
+            pawY = groundY;
+          } else {
+            // Hind leg: hip -> knee (forward) -> hock (backward) -> paw
+            kneeX = baseX + 14 * s + 3 * Math.sin(cycle + phase);
+            kneeY = baseY + 24 * s + 1.2 * breath;
+            ankleX = baseX - 10 * s + 2 * Math.sin(cycle + phase);
+            ankleY = baseY + 44 * s;
+            pawX = baseX - 4 * s;
+            pawY = groundY;
+          }
+
+          // Upper limb
+          ctx.strokeStyle = strokeCol;
+          ctx.lineWidth = (isFar ? 1.0 : 1.4) * s;
+          ctx.beginPath();
+          ctx.moveTo(baseX, baseY);
+          ctx.lineTo(kneeX, kneeY);
+          ctx.stroke();
+
+          // Actuator cylinder linkage
+          ctx.strokeStyle = accentCol;
+          ctx.lineWidth = 0.8 * s;
+          const dx1 = kneeX - baseX, dy1 = kneeY - baseY;
+          const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1) || 1;
+          const nx1 = (-dy1 / len1) * 3 * s;
+          const ny1 = (dx1 / len1) * 3 * s;
+          ctx.beginPath();
+          ctx.moveTo(baseX + nx1, baseY + ny1);
+          ctx.lineTo(kneeX + nx1, kneeY + ny1);
+          ctx.stroke();
+
+          // Lower limb
+          ctx.strokeStyle = strokeCol;
+          ctx.lineWidth = (isFar ? 0.9 : 1.3) * s;
+          ctx.beginPath();
+          ctx.moveTo(kneeX, kneeY);
+          ctx.lineTo(ankleX, ankleY);
+          ctx.stroke();
+
+          // Hydraulic strut
+          ctx.strokeStyle = cHairline;
+          ctx.lineWidth = 0.7 * s;
+          ctx.beginPath();
+          ctx.moveTo(kneeX - nx1, kneeY - ny1);
+          ctx.lineTo(ankleX, ankleY);
+          ctx.stroke();
+
+          // Ankle to Paw
+          ctx.strokeStyle = strokeCol;
+          ctx.lineWidth = (isFar ? 0.8 : 1.1) * s;
+          ctx.beginPath();
+          ctx.moveTo(ankleX, ankleY);
+          ctx.lineTo(pawX, pawY);
+          ctx.stroke();
+
+          // Paw Pad
+          ctx.fillStyle = strokeCol;
+          ctx.beginPath();
+          ctx.ellipse(pawX, pawY, 3.8 * s, 1.8 * s, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Joint Pivot Bearings
+          [ [baseX, baseY, 3.2 * s], [kneeX, kneeY, 2.8 * s], [ankleX, ankleY, 2.2 * s] ].forEach(([jx, jy, jr]) => {
+            ctx.beginPath();
+            ctx.arc(jx, jy, jr, 0, Math.PI * 2);
+            ctx.fillStyle = jointFill;
+            ctx.fill();
+            ctx.strokeStyle = strokeCol;
+            ctx.lineWidth = 0.9 * s;
+            ctx.stroke();
+          });
+        }
+
+        // Draw Background (Far) Limbs
+        drawLeg(hipX - 5 * s, hipY - 2 * s, false, true, Math.PI);
+        drawLeg(shoulderX - 4 * s, shoulderY - 2 * s, true, true, 0);
+
+        // Biomimetic Tail
+        ctx.strokeStyle = cStroke;
+        ctx.lineWidth = 1.3 * s;
+        const tailWave1 = 4 * Math.sin(time * 0.0019);
+        const tailWave2 = 8 * Math.sin(time * 0.0019 + 0.6);
+        const tailBaseX = hipX - 12 * s;
+        const tailBaseY = hipY - 2 * s;
+        const tailMidX = tailBaseX - 22 * s;
+        const tailMidY = tailBaseY - 14 * s + tailWave1;
+        const tailTipX = tailMidX - 24 * s;
+        const tailTipY = tailMidY - 16 * s + tailWave2;
+
+        ctx.beginPath();
+        ctx.moveTo(tailBaseX, tailBaseY);
+        ctx.quadraticCurveTo(tailMidX, tailMidY, tailTipX, tailTipY);
+        ctx.stroke();
+
+        // Active tail sensor bead
+        ctx.beginPath();
+        ctx.arc(tailTipX, tailTipY, 2.4 * s, 0, Math.PI * 2);
+        ctx.fillStyle = cSage;
+        ctx.fill();
+
+        // Torso Shell Plates (Chassis)
+        ctx.beginPath();
+        ctx.moveTo(hipX - 12 * s, hipY - 4 * s);
+        ctx.quadraticCurveTo(midSpineX, midSpineY - 12 * s, shoulderX + 8 * s, shoulderY - 8 * s);
+        ctx.lineTo(shoulderX + 12 * s, shoulderY + 8 * s);
+        ctx.quadraticCurveTo(midSpineX, midSpineY + 10 * s, hipX - 8 * s, hipY + 10 * s);
+        ctx.closePath();
+        ctx.fillStyle = cPlate;
+        ctx.fill();
+        ctx.strokeStyle = cStroke;
+        ctx.lineWidth = 1.4 * s;
+        ctx.stroke();
+
+        // Chassis Seam Lines & Internal Accents
+        ctx.beginPath();
+        ctx.moveTo(midSpineX - 16 * s, midSpineY - 6 * s);
+        ctx.lineTo(midSpineX + 18 * s, midSpineY - 3 * s);
+        ctx.strokeStyle = cIce;
+        ctx.lineWidth = 1.2 * s;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(midSpineX - 10 * s, midSpineY + 3 * s);
+        ctx.lineTo(midSpineX + 12 * s, midSpineY + 4 * s);
+        ctx.strokeStyle = cHairline;
+        ctx.lineWidth = 0.8 * s;
+        ctx.stroke();
+
+        // Cranial Pod (Head & Sensor Visor)
+        const neckX = shoulderX + 8 * s;
+        const neckY = shoulderY - 6 * s;
+        const headRot = 0.08 * Math.sin(time * 0.0014);
+        const headBaseX = neckX + 14 * s;
+        const headBaseY = neckY - 10 * s + headRot * 10 * s;
+        const snoutX = headBaseX + 24 * s;
+        const snoutY = headBaseY + 6 * s;
+        const craniumX = headBaseX + 4 * s;
+        const craniumY = headBaseY - 10 * s;
+
+        // Neck linkage
+        ctx.beginPath();
+        ctx.moveTo(neckX, neckY);
+        ctx.lineTo(headBaseX, headBaseY);
+        ctx.strokeStyle = cStroke;
+        ctx.lineWidth = 1.6 * s;
+        ctx.stroke();
+
+        // Head Shell
+        ctx.beginPath();
+        ctx.moveTo(headBaseX - 4 * s, headBaseY);
+        ctx.lineTo(craniumX, craniumY);
+        ctx.lineTo(snoutX, snoutY - 2 * s);
+        ctx.lineTo(snoutX - 4 * s, snoutY + 6 * s);
+        ctx.lineTo(headBaseX, headBaseY + 6 * s);
+        ctx.closePath();
+        ctx.fillStyle = cPlate;
+        ctx.fill();
+        ctx.strokeStyle = cStroke;
+        ctx.lineWidth = 1.3 * s;
+        ctx.stroke();
+
+        // Perception Sensor Visor (Glowing Ice/Cyan ocular slot)
+        ctx.beginPath();
+        ctx.moveTo(headBaseX + 10 * s, headBaseY - 4 * s);
+        ctx.lineTo(snoutX - 4 * s, snoutY + 1 * s);
+        ctx.strokeStyle = cIce;
+        ctx.lineWidth = 2.0 * s;
+        ctx.stroke();
+
+        // Glowing visor ocular dot
+        const ocularPhase = 0.5 + 0.5 * Math.sin(time * 0.003);
+        ctx.beginPath();
+        ctx.arc(snoutX - 6 * s, snoutY, 1.8 * s, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(106, 142, 158, ${(ocularPhase * 0.95 * alpha).toFixed(3)})`;
+        ctx.fill();
+
+        // Sensor Ears / Antenna Fin
+        ctx.beginPath();
+        ctx.moveTo(craniumX - 2 * s, craniumY + 2 * s);
+        ctx.lineTo(craniumX - 12 * s, craniumY - 10 * s + 2 * Math.sin(time * 0.002));
+        ctx.lineTo(craniumX + 4 * s, craniumY);
+        ctx.fillStyle = cPlate;
+        ctx.fill();
+        ctx.strokeStyle = cSage;
+        ctx.lineWidth = 1.0 * s;
+        ctx.stroke();
+
+        // Draw Foreground (Near) Limbs
+        drawLeg(hipX, hipY, false, false, 0);
+        drawLeg(shoulderX, shoulderY, true, false, Math.PI);
+
+        return {
+          headX: snoutX - 6 * s,
+          headY: snoutY,
+          spineX: midSpineX,
+          spineY: midSpineY - 10 * s
+        };
+      }
 
       let lastTime = performance.now();
 
@@ -527,239 +725,29 @@
         const isMobile = width < 768;
         const isTablet = width >= 768 && width < 1024;
         const globalBreath = 1 + 0.22 * Math.sin(time * 0.0009);
-        const maxDist = (isMobile ? 95 : 115) * globalBreath;
+        const maxDist = (isMobile ? 85 : 110) * globalBreath;
 
-        // -------------------------------------------------------------
-        // 1. Draw 3D Breathing Brain Wireframe (Left Flank or Hero Watermark on Mobile)
-        // -------------------------------------------------------------
-        let brainCenterX, brainCenterY, brainScale, brainAlphaMult;
+        // Right side positioning for Animaloid Bot
+        let botX, botY, botScale, botAlpha;
         if (isMobile) {
-          brainCenterX = width * 0.5;
-          brainCenterY = Math.min(height * 0.26, 175);
-          brainScale = 0.55 * (1 + 0.08 * Math.sin(time * 0.0012));
-          brainAlphaMult = 0.45;
+          botX = width * 0.80;
+          botY = Math.min(height * 0.28, 200);
+          botScale = 0.55;
+          botAlpha = 0.38;
         } else if (isTablet) {
-          brainCenterX = Math.max(70, width * 0.10);
-          brainCenterY = Math.min(height * 0.42, 380);
-          brainScale = 0.75 * (1 + 0.08 * Math.sin(time * 0.0012));
-          brainAlphaMult = 0.85;
+          botX = width * 0.78;
+          botY = Math.min(height * 0.38, 330);
+          botScale = 0.82;
+          botAlpha = 0.88;
         } else {
-          brainCenterX = Math.max(120, width * 0.13);
-          brainCenterY = Math.min(height * 0.42, 380);
-          brainScale = 1.05 * (1 + 0.08 * Math.sin(time * 0.0012));
-          brainAlphaMult = 1.0;
+          // Desktop: Right side focus
+          botX = width > 1280 ? width * 0.78 : width * 0.75;
+          botY = Math.min(height * 0.42, 360);
+          botScale = 1.1;
+          botAlpha = 0.95;
         }
 
-        // Subtle 3D rotation angles
-        const rotY = time * 0.00045;
-        const rotX = 0.22 + 0.12 * Math.sin(time * 0.00035);
-
-        const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-        const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-
-        // Project 3D points to 2D
-        const projected = [];
-        for (let i = 0; i < brainPoints.length; i++) {
-          const pt = brainPoints[i];
-          // Rotate Y
-          const x1 = pt.ox * cosY + pt.oz * sinY;
-          const z1 = -pt.ox * sinY + pt.oz * cosY;
-          // Rotate X
-          const y2 = pt.oy * cosX - z1 * sinX;
-          const z2 = pt.oy * sinX + z1 * cosX;
-
-          const fov = 340;
-          const perspective = fov / (fov + z2);
-          const px = brainCenterX + x1 * brainScale * perspective;
-          const py = brainCenterY + y2 * brainScale * perspective;
-
-          projected.push({
-            x: px,
-            y: py,
-            depth: z2,
-            lobe: pt.lobe,
-            phase: pt.pulseOffset
-          });
-        }
-
-        // Draw Brain Edges
-        ctx.lineWidth = isMobile ? 0.6 : 0.75;
-        for (let k = 0; k < brainEdges.length; k++) {
-          const [i, j] = brainEdges[k];
-          const p1 = projected[i];
-          const p2 = projected[j];
-
-          const edgeAlpha = Math.max(0.03, Math.min(0.24, 0.14 + (p1.depth + p2.depth) * 0.0015)) * globalBreath * brainAlphaMult;
-          ctx.beginPath();
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.strokeStyle = `rgba(139, 128, 166, ${edgeAlpha.toFixed(3)})`;
-          ctx.stroke();
-        }
-
-        // Draw Brain Synapse Nodes
-        for (let i = 0; i < projected.length; i++) {
-          const p = projected[i];
-          const synBreath = Math.sin(time * 0.0018 + p.phase);
-          const nodeRadius = (1.2 + 0.8 * synBreath) * (isMobile ? 0.75 : 1);
-          const alpha = (0.28 + 0.28 * synBreath) * brainAlphaMult;
-
-          // Alternating pastel sage and lavender
-          const col = p.lobe === -1 ? '109, 139, 116' : '139, 128, 166';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, Math.max(0.5, nodeRadius), 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${col}, ${alpha.toFixed(3)})`;
-          ctx.fill();
-        }
-
-        // Brain Technical Label
-        ctx.font = `${isMobile ? '8px' : '9px'} 'JetBrains Mono', monospace`;
-        ctx.fillStyle = `rgba(140, 125, 111, ${(0.45 * brainAlphaMult).toFixed(3)})`;
-        ctx.textAlign = "center";
-        ctx.fillText("NEURAL CORTEX // WIREFRAME", brainCenterX, brainCenterY + 84 * brainScale);
-
-        // -------------------------------------------------------------
-        // 2. Draw Kinematic Robotic Manipulator Wireframe (Right Flank or Lower Watermark on Mobile)
-        // -------------------------------------------------------------
-        let robX, robY, robScale, robAlphaMult;
-        if (isMobile) {
-          robX = width * 0.5;
-          robY = height - 100;
-          robScale = 0.52;
-          robAlphaMult = 0.42;
-        } else if (isTablet) {
-          robX = Math.min(width - 70, width * 0.90);
-          robY = Math.min(height * 0.42, 380);
-          robScale = 0.75;
-          robAlphaMult = 0.85;
-        } else {
-          robX = Math.min(width - 120, width * 0.87);
-          robY = Math.min(height * 0.42, 380);
-          robScale = 1.05;
-          robAlphaMult = 1.0;
-        }
-
-        // Kinematic joint rotations cycling smoothly
-        const theta1 = -0.45 + 0.18 * Math.sin(time * 0.0008); // Shoulder
-        const theta2 = 0.85 + 0.24 * Math.cos(time * 0.0006);  // Elbow
-        const theta3 = -0.52 + 0.16 * Math.sin(time * 0.001);  // Wrist
-
-        const L1 = 55 * robScale;
-        const L2 = 50 * robScale;
-        const L3 = 24 * robScale;
-
-        // Base Pedestal
-        ctx.strokeStyle = `rgba(106, 142, 158, ${(0.25 * robAlphaMult).toFixed(3)})`;
-        ctx.lineWidth = isMobile ? 0.75 : 1;
-        ctx.beginPath();
-        ctx.ellipse(robX, robY + 65 * robScale, 36 * robScale, 10 * robScale, 0, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.ellipse(robX, robY + 62 * robScale, 26 * robScale, 7 * robScale, 0, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Joint 0 (Base Center)
-        const p0 = { x: robX, y: robY + 58 * robScale };
-
-        // Joint 1 (Shoulder)
-        const p1 = { x: p0.x, y: p0.y - 20 * robScale };
-
-        // Joint 2 (Elbow)
-        const p2 = {
-          x: p1.x + L1 * Math.sin(theta1),
-          y: p1.y - L1 * Math.cos(theta1)
-        };
-
-        // Joint 3 (Wrist)
-        const p3 = {
-          x: p2.x + L2 * Math.sin(theta1 + theta2),
-          y: p2.y - L2 * Math.cos(theta1 + theta2)
-        };
-
-        // End-Effector Tip (Gripper)
-        const pEnd = {
-          x: p3.x + L3 * Math.sin(theta1 + theta2 + theta3),
-          y: p3.y - L3 * Math.cos(theta1 + theta2 + theta3)
-        };
-
-        // Robotic Truss Links (Double hairline with diagonal bracing)
-        function drawRoboticTruss(a, b, widthOffset, color) {
-          const dx = b.x - a.x;
-          const dy = b.y - a.y;
-          const len = Math.sqrt(dx * dx + dy * dy);
-          const nx = (-dy / len) * widthOffset;
-          const ny = (dx / len) * widthOffset;
-
-          ctx.strokeStyle = color;
-          ctx.lineWidth = isMobile ? 0.7 : 0.9;
-          ctx.beginPath();
-          ctx.moveTo(a.x + nx, a.y + ny);
-          ctx.lineTo(b.x + nx, b.y + ny);
-          ctx.moveTo(a.x - nx, a.y - ny);
-          ctx.lineTo(b.x - nx, b.y - ny);
-          // Diagonal brace
-          ctx.moveTo(a.x + nx, a.y + ny);
-          ctx.lineTo(b.x - nx, b.y - ny);
-          ctx.stroke();
-        }
-
-        // Draw Base pillar
-        ctx.strokeStyle = `rgba(106, 142, 158, ${(0.35 * robAlphaMult).toFixed(3)})`;
-        ctx.beginPath();
-        ctx.moveTo(p0.x - 8 * robScale, p0.y);
-        ctx.lineTo(p1.x - 6 * robScale, p1.y);
-        ctx.moveTo(p0.x + 8 * robScale, p0.y);
-        ctx.lineTo(p1.x + 6 * robScale, p1.y);
-        ctx.stroke();
-
-        // Draw Link 1 & Link 2
-        drawRoboticTruss(p1, p2, 4.5 * robScale, `rgba(106, 142, 158, ${(0.3 * robAlphaMult).toFixed(3)})`);
-        drawRoboticTruss(p2, p3, 3.5 * robScale, `rgba(197, 126, 101, ${(0.3 * robAlphaMult).toFixed(3)})`);
-
-        // Draw Wrist & Gripper Fingers
-        ctx.strokeStyle = `rgba(106, 142, 158, ${(0.45 * robAlphaMult).toFixed(3)})`;
-        ctx.beginPath();
-        ctx.moveTo(p3.x, p3.y);
-        ctx.lineTo(pEnd.x, pEnd.y);
-        ctx.stroke();
-
-        // Gripper Claws (End Effector)
-        const clawAngle = 0.45 + 0.15 * Math.sin(time * 0.002);
-        const clawLen = 10 * robScale;
-        const clawBaseAngle = Math.atan2(pEnd.y - p3.y, pEnd.x - p3.x);
-
-        ctx.strokeStyle = `rgba(109, 139, 116, ${(0.6 * robAlphaMult).toFixed(3)})`;
-        ctx.lineWidth = isMobile ? 0.9 : 1.2;
-        ctx.beginPath();
-        ctx.moveTo(pEnd.x, pEnd.y);
-        ctx.lineTo(pEnd.x + clawLen * Math.cos(clawBaseAngle - clawAngle), pEnd.y + clawLen * Math.sin(clawBaseAngle - clawAngle));
-        ctx.moveTo(pEnd.x, pEnd.y);
-        ctx.lineTo(pEnd.x + clawLen * Math.cos(clawBaseAngle + clawAngle), pEnd.y + clawLen * Math.sin(clawBaseAngle + clawAngle));
-        ctx.stroke();
-
-        // Joint Pivot Rings & Labels
-        [p1, p2, p3].forEach((joint, idx) => {
-          ctx.beginPath();
-          ctx.arc(joint.x, joint.y, 3.5 * robScale, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(250, 247, 242, ${(0.9 * robAlphaMult).toFixed(3)})`;
-          ctx.fill();
-          ctx.strokeStyle = idx === 1 
-            ? `rgba(197, 126, 101, ${(0.7 * robAlphaMult).toFixed(3)})` 
-            : `rgba(106, 142, 158, ${(0.7 * robAlphaMult).toFixed(3)})`;
-          ctx.lineWidth = isMobile ? 0.9 : 1.2;
-          ctx.stroke();
-        });
-
-        // Robot Technical Label
-        ctx.font = `${isMobile ? '8px' : '9px'} 'JetBrains Mono', monospace`;
-        ctx.fillStyle = `rgba(140, 125, 111, ${(0.45 * robAlphaMult).toFixed(3)})`;
-        ctx.textAlign = "center";
-        ctx.fillText("ROBOTIC KINEMATICS // 6-DoF", robX, robY + 84 * robScale);
-
-        // -------------------------------------------------------------
-        // 3. Draw Background Neural Network & Connecting Fibers
-        // -------------------------------------------------------------
+        // Draw Neural Network connecting fibers (right side)
         for (let i = 0; i < nodes.length; i++) {
           const a = nodes[i];
           for (let j = i + 1; j < nodes.length; j++) {
@@ -769,7 +757,7 @@
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < maxDist) {
-              const alpha = (1 - dist / maxDist) * 0.2 * globalBreath;
+              const alpha = (1 - dist / maxDist) * 0.22 * globalBreath;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
@@ -780,7 +768,7 @@
           }
         }
 
-        // Draw Synaptic Impulses
+        // Draw Synaptic Impulses traveling along neural fibers
         for (let p = pulses.length - 1; p >= 0; p--) {
           const pulse = pulses[p];
           pulse.progress += pulse.speed;
@@ -801,14 +789,16 @@
           ctx.shadowBlur = 0;
         }
 
-        // Draw Neural Nodes
+        // Draw Neural Network Nodes
         for (let i = 0; i < nodes.length; i++) {
           const n = nodes[i];
           n.x += n.vx;
           n.y += n.vy;
 
-          if (n.x < -20) n.x = width + 20;
-          if (n.x > width + 20) n.x = -20;
+          const minX = isMobile ? width * 0.35 : width * 0.48;
+          const maxX = width + 20;
+          if (n.x < minX) n.vx = Math.abs(n.vx);
+          if (n.x > maxX) n.vx = -Math.abs(n.vx);
           if (n.y < -20) n.y = height + 20;
           if (n.y > height + 20) n.y = -20;
 
@@ -818,7 +808,7 @@
           const { r, g, b } = n.color;
 
           // Glowing halo
-          const haloRadius = currentRadius * 3.2;
+          const haloRadius = currentRadius * 3.0;
           const gradient = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, haloRadius);
           gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${(nodeAlpha * 0.35).toFixed(3)})`);
           gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
@@ -832,6 +822,35 @@
           ctx.arc(n.x, n.y, currentRadius, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${nodeAlpha.toFixed(3)})`;
           ctx.fill();
+        }
+
+        // Draw Animaloid Companion Robot on the Right Side
+        const botNodes = drawAnimaloidBot(botX, botY, botScale, botAlpha, time);
+
+        // Synaptic neural link from nearest network nodes to robot sensory visor
+        if (botNodes && nodes.length > 0) {
+          let closestNode = null;
+          let minDist = 220 * botScale;
+          for (let i = 0; i < nodes.length; i++) {
+            const dx = nodes[i].x - botNodes.headX;
+            const dy = nodes[i].y - botNodes.headY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDist) {
+              minDist = dist;
+              closestNode = nodes[i];
+            }
+          }
+          if (closestNode) {
+            const linkAlpha = (1 - minDist / (220 * botScale)) * 0.35 * botAlpha;
+            ctx.beginPath();
+            ctx.moveTo(closestNode.x, closestNode.y);
+            ctx.lineTo(botNodes.headX, botNodes.headY);
+            ctx.strokeStyle = `rgba(106, 142, 158, ${linkAlpha.toFixed(3)})`;
+            ctx.lineWidth = 1;
+            ctx.setLineDash([3, 3]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
         }
 
         animId = requestAnimationFrame(draw);
