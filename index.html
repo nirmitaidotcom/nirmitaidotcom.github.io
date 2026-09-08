@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NirmitAI — Autonomous Intelligence, Robotics & Automation</title>
+  <meta name="description" content="Engineering the synthesis of autonomous AI agents, precision robotics, and resilient enterprise automation." />
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:title" content="NirmitAI — Autonomous Intelligence, Robotics & Automation" />
+  <meta property="og:description" content="Engineering the synthesis of autonomous AI agents, precision robotics, and resilient enterprise automation." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nirmitai.com" />
+
+  <!-- High-craft typography: Syne (Display), Plus Jakarta Sans (Body), JetBrains Mono (Technical) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            oat: {
+              50: '#FAF7F2',   // Primary light porcelain/canvas
+              100: '#F4EFEA',  // Soft linen card surface
+              150: '#EFE8E1',  // Subtle hover highlight
+              200: '#E6DED5',  // Hairline borders
+              300: '#D5C9BD',  // Secondary borders & grid
+              400: '#B0A294',  // Muted technical notes
+              500: '#8C7D6F',  // Secondary labels
+              700: '#4A4139',  // Deep warm grey
+              900: '#1F1B18',  // Primary carbon black text
+              950: '#141210'   // Deepest contrast carbon
+            },
+            // Sober, muted pastel technical accents
+            pastel: {
+              sage: '#6D8B74',      // Sober botanical sage
+              sageSoft: '#E3EBE4',  // Warm tint sage
+              lavender: '#8B80A6',  // Sober muted wisteria
+              lavenderSoft: '#ECE8F4',
+              clay: '#C57E65',      // Warm terracotta/peach
+              claySoft: '#FAECE7',
+              ice: '#6A8E9E',       // Muted slate celadon
+              iceSoft: '#E4EEF2'
+            }
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            body: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          letterSpacing: {
+            widest2: '0.2em'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Architectural Beige Foundation */
+    body {
+      background-color: #FAF7F2;
+      color: #1F1B18;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Precision Technical Grid */
+    .blueprint-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(140, 125, 111, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(140, 125, 111, 0.07) 1px, transparent 1px);
+    }
+
+    /* Refined Architectural Borders */
+    .tech-border {
+      border: 1px solid #E6DED5;
+    }
+
+    .tech-card {
+      background: #F4EFEA;
+      border: 1px solid #E6DED5;
+      box-shadow: 0 4px 20px -2px rgba(74, 65, 57, 0.04);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tech-card:hover {
+      border-color: #D5C9BD;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px -4px rgba(74, 65, 57, 0.08);
+    }
+
+    /* Custom subtle warm scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF7F2;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5C9BD;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B0A294;
+    }
+  </style>
+</head>
+<body class="blueprint-grid min-h-screen relative selection:bg-pastel-sageSoft selection:text-oat-900">
+
+  <!-- Top System Header Coordinates Ribbon -->
+  <div class="bg-oat-100 border-b border-oat-200 py-1.5 px-6 text-[11px] font-mono text-oat-500 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 font-medium text-oat-700">
+        <span class="w-2 h-2 rounded-full bg-pastel-sage inline-block"></span>
+        NIRMIT.CORE // LIVE
+      </span>
+      <span class="text-oat-300">|</span>
+      <span>LOC: GURUGRAM [28.4595° N, 77.0266° E]</span>
+    </div>
+    <div class="flex items-center gap-4 text-[10px]">
+      <span>SENSORY BUS: <strong class="text-oat-900 font-semibold">0.78ms</strong></span>
+      <span class="text-oat-300">|</span>
+      <span>SYSTEM: <strong class="text-oat-900 font-semibold">AUTONOMOUS</strong></span>
+      <span class="text-oat-300">|</span>
+      <span class="text-pastel-sage font-medium">DOMAIN: NIRMITAI.COM</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-oat-50/90 border-b border-oat-200">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      
+      <!-- Brand & Sanskrit Root -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-lg bg-oat-100 border border-oat-300 flex items-center justify-center p-2 text-oat-900 group-hover:bg-oat-150 transition-colors">
+          <!-- Cybernetic Kinematic Glyph -->
+          <svg viewBox="0 0 24 24" class="w-full h-full text-oat-900" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+            <path d="M10 6.5h4M6.5 10v4M10 17.5h4M17.5 10v4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-display font-bold text-xl tracking-tight text-oat-950">Nirmit<span class="text-pastel-sage font-extrabold">AI</span></span>
+            <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-oat-200 text-oat-700">निर्मित</span>
+          </div>
+          <span class="text-[9px] font-mono tracking-widest text-oat-500 uppercase">Robotics &amp; Bot Autonomy</span>
+        </div>
+      </a>
+
+      <!-- Desktop Links -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-oat-700">
+        <a href="#capabilities" class="hover:text-oat-950 transition-colors">Capabilities</a>
+        <a href="#telemetry" class="hover:text-oat-950 transition-colors">Command Deck</a>
+        <a href="#architecture" class="hover:text-oat-950 transition-colors">Execution Loop</a>
+        <a href="#about" class="hover:text-oat-950 transition-colors">Philosophy</a>
+      </nav>
+
+      <!-- Right CTA -->
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="px-4 py-2 rounded-lg bg-oat-900 hover:bg-oat-700 text-oat-50 text-xs font-mono tracking-wide transition-all shadow-sm flex items-center gap-2">
+          <span>// TRANSMIT DISPATCH</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-16 pb-24 px-6 max-w-7xl mx-auto">
+    <div class="max-w-4xl mx-auto text-center space-y-6">
+      
+      <!-- Status Tag -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-oat-100 border border-oat-200 text-xs font-mono text-oat-700">
+        <span class="w-1.5 h-1.5 rounded-full bg-pastel-sage"></span>
+        <span class="font-medium tracking-wide uppercase">AUTONOMOUS EMBODIED INTELLIGENCE</span>
+        <span class="text-oat-300">/</span>
+        <span class="text-oat-500">SPEC. 2026.1</span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-oat-950 leading-[1.08]">
+        Robotics, AI Swarms &amp; <br>
+        <span class="text-oat-700 underline decoration-pastel-sage decoration-4 underline-offset-8">
+          Self-Governing Bots
+        </span>.
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="text-base sm:text-lg text-oat-700 leading-relaxed max-w-2xl mx-auto font-normal">
+        NirmitAI converges embodied robotic kinematics, multi-agent cognitive reasoning, and enterprise hyper-automation into deterministic, high-throughput systems.
+      </p>
+
+      <!-- Call to Action -->
+      <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
+        <a href="#telemetry" class="px-6 py-3.5 rounded-xl bg-oat-900 hover:bg-oat-700 text-oat-50 text-xs font-mono tracking-wider transition-all shadow-md flex items-center gap-2.5">
+          <span>[+] OPERATIONAL DECK</span>
+          <svg class="w-4 h-4 text-pastel-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </a>
+
+        <a href="#capabilities" class="px-6 py-3.5 rounded-xl bg-oat-100 hover:bg-oat-150 border border-oat-300 text-oat-900 text-xs font-mono tracking-wider transition-colors">
+          // EXPLORE CAPABILITIES
+        </a>
+      </div>
+
+      <!-- 4 Technical Metrics Banner (Warm Beige & Pastel Accents) -->
+      <div class="pt-12 grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 text-left">
+        
+        <div class="p-5 rounded-xl tech-card">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-oat-500 uppercase tracking-wider">01 // INGESTION</span>
+            <span class="w-2 h-2 rounded-full bg-pastel-sage"></span>
+          </div>
+          <div class="text-2xl font-mono font-bold text-oat-950 mt-2">0.78 <span class="text-xs text-oat-500 font-normal">ms</span></div>
+          <div class="text-xs text-oat-700 mt-1">Real-time edge perception latency</div>
+        </div>
+
+        <div class="p-5 rounded-xl tech-card">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-oat-500 uppercase tracking-wider">02 // KINEMATICS</span>
+            <span class="w-2 h-2 rounded-full bg-pastel-ice"></span>
+          </div>
+          <div class="text-2xl font-mono font-bold text-oat-950 mt-2">±0.03 <span class="text-xs text-oat-500 font-normal">mm</span></div>
+          <div class="text-xs text-oat-700 mt-1">Sub-millimeter actuator repeatability</div>
+        </div>
+
+        <div class="p-5 rounded-xl tech-card">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-oat-500 uppercase tracking-wider">03 // SWARMS</span>
+            <span class="w-2 h-2 rounded-full bg-pastel-lavender"></span>
+          </div>
+          <div class="text-2xl font-mono font-bold text-oat-950 mt-2">128 <span class="text-xs text-oat-500 font-normal">Nodes</span></div>
+          <div class="text-xs text-oat-700 mt-1">Synchronized agentic swarm mesh</div>
+        </div>
+
+        <div class="p-5 rounded-xl tech-card">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono text-oat-500 uppercase tracking-wider">04 // VERIFICATION</span>
+            <span class="w-2 h-2 rounded-full bg-pastel-clay"></span>
+          </div>
+          <div class="text-2xl font-mono font-bold text-oat-950 mt-2">SIL-3</div>
+          <div class="text-xs text-oat-700 mt-1">Deterministic hardware bounds check</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Telemetry Console (Industrial Beige Minimalist Design) -->
+  <section id="telemetry" class="py-20 px-6 max-w-7xl mx-auto">
+    <div class="max-w-2xl mx-auto text-center space-y-3 mb-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oat-100 border border-oat-200 text-xs font-mono text-oat-700">
+        <span>INTERACTIVE WORKBENCH</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-oat-950 tracking-tight">
+        Simulated Operational Console
+      </h2>
+      <p class="text-oat-700 text-sm">
+        Preview telemetry across multi-agent consensus, robotic trajectory planning, and enterprise bot workflows.
+      </p>
+    </div>
+
+    <!-- Console Terminal -->
+    <div class="bg-oat-100 border border-oat-300 rounded-2xl p-6 sm:p-8 shadow-sm">
+      
+      <!-- Switcher Toolbar -->
+      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-oat-200 pb-5">
+        <div class="flex items-center gap-2 overflow-x-auto">
+          <button onclick="switchDeckTab('agents')" id="deck-btn-agents" class="deck-btn px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all bg-oat-900 text-oat-50 flex items-center gap-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-pastel-lavender"></span>
+            <span>01 // Multi-Agent Swarm</span>
+          </button>
+
+          <button onclick="switchDeckTab('robotics')" id="deck-btn-robotics" class="deck-btn px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all bg-oat-50 text-oat-700 border border-oat-200 hover:border-oat-300 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-pastel-ice"></span>
+            <span>02 // Robotic Kinematics</span>
+          </button>
+
+          <button onclick="switchDeckTab('bots')" id="deck-btn-bots" class="deck-btn px-4 py-2 rounded-lg text-xs font-mono font-medium transition-all bg-oat-50 text-oat-700 border border-oat-200 hover:border-oat-300 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-pastel-sage"></span>
+            <span>03 // Process Bots</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="text-[11px] font-mono text-oat-500 hidden sm:inline">CYCLE RATE: 1000MS</span>
+          <button onclick="triggerDiagnosticPulse()" class="px-3 py-1.5 rounded-lg bg-oat-50 hover:bg-oat-200 border border-oat-300 text-xs font-mono text-oat-900 flex items-center gap-2 transition-all">
+            <span class="w-2 h-2 rounded-full bg-pastel-sage animate-ping"></span>
+            <span>Trigger Pulse</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 1: Agent Swarm -->
+      <div id="deck-pane-agents" class="deck-pane pt-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Agent Node Status -->
+          <div class="p-5 rounded-xl bg-oat-50 border border-oat-200 space-y-4">
+            <div class="flex items-center justify-between text-xs font-mono text-oat-700">
+              <span class="uppercase tracking-wider">Mesh Node States</span>
+              <span class="px-2 py-0.5 rounded bg-pastel-lavenderSoft text-pastel-lavender font-semibold text-[10px]">CONSENSUS 99.4%</span>
+            </div>
+            
+            <div class="space-y-3 font-mono text-xs">
+              <div class="flex justify-between items-center py-1 border-b border-oat-200">
+                <span class="text-oat-500">Node α (Goal Planner):</span>
+                <span class="text-pastel-sage font-medium">Decomposing Sub-tasks</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-oat-200">
+                <span class="text-oat-500">Node β (Vision Evaluator):</span>
+                <span class="text-pastel-ice font-medium">Point-Cloud Ingest</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-oat-200">
+                <span class="text-oat-500">Node γ (Actuator Arbiter):</span>
+                <span class="text-pastel-clay font-medium">Kinematic Envelope OK</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-oat-500">Long-term Memory Store:</span>
+                <span class="text-oat-900 font-semibold">14,820 Vectors</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agent Trace Log -->
+          <div class="md:col-span-2 p-5 rounded-xl bg-oat-50 border border-oat-200 space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-oat-200 pb-2">
+              <span class="text-oat-500 uppercase text-[10px]">Live Agent Cognitive Stream</span>
+              <span class="text-[10px] text-oat-400" id="deck-timestamp">17:32:01.402 UTC</span>
+            </div>
+            <div class="space-y-2 text-oat-700 h-36 overflow-y-auto pr-2" id="deck-agent-logs">
+              <div class="flex gap-2"><span class="text-pastel-lavender font-semibold">[Planner]</span> Synthesizing action tree for real-time robotic pick-and-orient.</div>
+              <div class="flex gap-2"><span class="text-pastel-sage font-semibold">[Perception]</span> RGB-D depth frame registered: obstacle cleared with 48mm margin.</div>
+              <div class="flex gap-2"><span class="text-pastel-ice font-semibold">[Swarm]</span> Context state synchronized across 4 local edge micro-controllers.</div>
+              <div class="flex gap-2"><span class="text-pastel-clay font-semibold">[Safety]</span> Dynamic velocity governor confirmed zero kinetic overshoot risk.</div>
+              <div class="flex gap-2 text-oat-950 font-medium"><span class="text-pastel-sage font-bold">[Execution]</span> Trajectory dispatched to robotic end-effector at 1000Hz.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Tab 2: Robotics Kinematics -->
+      <div id="deck-pane-robotics" class="deck-pane hidden pt-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Joint Telemetry -->
+          <div class="p-5 rounded-xl bg-oat-50 border border-oat-200 space-y-4">
+            <div class="flex items-center justify-between text-xs font-mono text-oat-700">
+              <span class="uppercase tracking-wider">6-DoF Actuator Joints</span>
+              <span class="px-2 py-0.5 rounded bg-pastel-iceSoft text-pastel-ice font-semibold text-[10px]">NOMINAL</span>
+            </div>
+
+            <div class="space-y-3 font-mono text-xs">
+              <div>
+                <div class="flex justify-between text-oat-700 text-[11px] mb-1">
+                  <span>J1 (Base Yaw):</span>
+                  <span class="text-oat-950 font-bold" id="deck-j1">43.2°</span>
+                </div>
+                <div class="w-full bg-oat-200 rounded-full h-1.5 overflow-hidden">
+                  <div class="bg-pastel-ice h-1.5 rounded-full" style="width: 55%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-oat-700 text-[11px] mb-1">
+                  <span>J2 (Shoulder Pitch):</span>
+                  <span class="text-oat-950 font-bold" id="deck-j2">-17.8°</span>
+                </div>
+                <div class="w-full bg-oat-200 rounded-full h-1.5 overflow-hidden">
+                  <div class="bg-pastel-ice h-1.5 rounded-full" style="width: 42%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-oat-700 text-[11px] mb-1">
+                  <span>J3 (Elbow Bend):</span>
+                  <span class="text-oat-950 font-bold" id="deck-j3">95.4°</span>
+                </div>
+                <div class="w-full bg-oat-200 rounded-full h-1.5 overflow-hidden">
+                  <div class="bg-pastel-ice h-1.5 rounded-full" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Motion Trajectory Schematic -->
+          <div class="md:col-span-2 p-5 rounded-xl bg-oat-50 border border-oat-200 space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-oat-200 pb-2">
+              <span class="text-oat-500 uppercase text-[10px]">Inverse Kinematics Polynomial Spline</span>
+              <span class="text-pastel-sage font-medium text-[10px]">Vector Target Locked</span>
+            </div>
+            
+            <div class="h-36 flex items-center justify-center relative border border-dashed border-oat-300 rounded-lg p-4 bg-oat-100/50">
+              <svg viewBox="0 0 400 120" class="w-full h-full text-oat-400">
+                <path d="M 20 90 Q 110 15, 210 65 T 380 35" fill="none" stroke="#D5C9BD" stroke-width="2" stroke-dasharray="4 4" />
+                <path d="M 20 90 C 90 35, 170 30, 250 55 S 340 25, 380 35" fill="none" stroke="#6D8B74" stroke-width="2.5" />
+                <circle cx="20" cy="90" r="4" fill="#6D8B74" />
+                <circle cx="170" cy="35" r="4" fill="#8B80A6" />
+                <circle cx="280" cy="50" r="4" fill="#C57E65" />
+                <circle cx="380" cy="35" r="5" fill="#6A8E9E" />
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Tab 3: Process Bots -->
+      <div id="deck-pane-bots" class="deck-pane hidden pt-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Bot Throughput -->
+          <div class="p-5 rounded-xl bg-oat-50 border border-oat-200 space-y-4">
+            <div class="flex items-center justify-between text-xs font-mono text-oat-700">
+              <span class="uppercase tracking-wider">Enterprise Bot Fleet</span>
+              <span class="px-2 py-0.5 rounded bg-pastel-sageSoft text-pastel-sage font-semibold text-[10px]">100% HEALTH</span>
+            </div>
+            
+            <div class="space-y-3 font-mono text-xs">
+              <div class="flex justify-between items-center py-1 border-b border-oat-200">
+                <span class="text-oat-500">Active Bot Instances:</span>
+                <span class="text-oat-900 font-bold">142 Running</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-oat-200">
+                <span class="text-oat-500">Mean Pipeline Duration:</span>
+                <span class="text-pastel-sage font-bold">12.4 ms</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-oat-200">
+                <span class="text-oat-500">Self-Healed Invocations:</span>
+                <span class="text-pastel-clay font-bold">34 Repaired</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-oat-500">Ledger Signatures:</span>
+                <span class="text-oat-900 font-semibold">ED25519 Valid</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bot Dispatch Stream -->
+          <div class="md:col-span-2 p-5 rounded-xl bg-oat-50 border border-oat-200 space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between border-b border-oat-200 pb-2">
+              <span class="text-oat-500 uppercase text-[10px]">Automated Orchestration Stream</span>
+              <span class="text-oat-400 text-[10px]">QUEUE ID // NMT-9812</span>
+            </div>
+            <div class="space-y-2 text-oat-700 h-36 overflow-y-auto pr-2">
+              <div class="flex gap-2"><span class="text-pastel-sage font-semibold">[Trigger]</span> Multi-source payload ingested via authenticated webhook.</div>
+              <div class="flex gap-2"><span class="text-pastel-ice font-semibold">[Parsing]</span> Unstructured document schema mapped to unified data contract in 1.8ms.</div>
+              <div class="flex gap-2"><span class="text-pastel-lavender font-semibold">[Process Bot]</span> Downstream dispatch triggered across distributed ERP endpoints.</div>
+              <div class="flex gap-2"><span class="text-pastel-clay font-semibold">[Ledger]</span> Cryptographic verification seal committed to immutable audit record.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Core Capabilities Showcase (4 Sober Pastel Pillars) -->
+  <section id="capabilities" class="py-24 px-6 max-w-7xl mx-auto border-t border-oat-200">
+    <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oat-100 border border-oat-200 text-xs font-mono text-oat-700">
+        <span>CORE CAPABILITIES</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold text-oat-950 tracking-tight">
+        Engineered for Deterministic Autonomy
+      </h2>
+      <p class="text-oat-700 text-base">
+        Bridging high-level reasoning intelligence with real-world physical machines and self-repairing digital processes.
+      </p>
+    </div>
+
+    <!-- 4 Pillar Grid with Warm Beige Cards & Sober Pastel Badges -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Pillar 1: Embodied AI & Robotics -->
+      <div class="tech-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-pastel-iceSoft border border-oat-300 flex items-center justify-center text-pastel-ice mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+          </svg>
+        </div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-display text-2xl font-bold text-oat-950">Embodied Robotics &amp; Kinematics</h3>
+          <span class="text-xs font-mono text-pastel-ice font-semibold bg-pastel-iceSoft px-2.5 py-0.5 rounded">01 // PHYSICAL</span>
+        </div>
+        <p class="text-oat-700 text-sm leading-relaxed mb-6 font-normal">
+          Real-time inverse kinematics, edge sensory fusion, and closed-loop motion planning. We engineer robotic manipulators, mobile platforms, and actuators to navigate dynamic real-world environments with sub-millimeter precision.
+        </p>
+        <ul class="space-y-2 text-xs font-mono text-oat-700 border-t border-oat-200 pt-4">
+          <li class="flex items-center gap-2"><span class="text-pastel-ice font-bold">✦</span> ROS2 &amp; Micro-actuator Hardware Controllers</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-ice font-bold">✦</span> Sub-millisecond Visual Servoing Feedback</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-ice font-bold">✦</span> Dynamic Obstacle Avoidance Envelopes</li>
+        </ul>
+      </div>
+
+      <!-- Pillar 2: Multi-Agent Swarms -->
+      <div class="tech-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-pastel-lavenderSoft border border-oat-300 flex items-center justify-center text-pastel-lavender mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-display text-2xl font-bold text-oat-950">Multi-Agent Swarm Intelligence</h3>
+          <span class="text-xs font-mono text-pastel-lavender font-semibold bg-pastel-lavenderSoft px-2.5 py-0.5 rounded">02 // COGNITIVE</span>
+        </div>
+        <p class="text-oat-700 text-sm leading-relaxed mb-6 font-normal">
+          Collaborative agentic hierarchies that decompose complex goals into discrete, verified milestones. Agents communicate across decentralized mesh protocols, sharing contextual memory and executing deterministic consensus.
+        </p>
+        <ul class="space-y-2 text-xs font-mono text-oat-700 border-t border-oat-200 pt-4">
+          <li class="flex items-center gap-2"><span class="text-pastel-lavender font-bold">✦</span> Hierarchical Task Decomposition &amp; Delegation</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-lavender font-bold">✦</span> Vector-Augmented Long-Term Agent Memory</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-lavender font-bold">✦</span> Anti-Hallucination Verification Chains</li>
+        </ul>
+      </div>
+
+      <!-- Pillar 3: Process Bots & RPA 2.0 -->
+      <div class="tech-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-pastel-sageSoft border border-oat-300 flex items-center justify-center text-pastel-sage mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-display text-2xl font-bold text-oat-950">Process Automation &amp; Bots</h3>
+          <span class="text-xs font-mono text-pastel-sage font-semibold bg-pastel-sageSoft px-2.5 py-0.5 rounded">03 // OPERATIONS</span>
+        </div>
+        <p class="text-oat-700 text-sm leading-relaxed mb-6 font-normal">
+          Intelligent robotic process automation (RPA 2.0). We replace brittle scripts with cognitive bots that ingest unstructured PDFs, synchronize fragmented APIs, and heal execution failures automatically without human intervention.
+        </p>
+        <ul class="space-y-2 text-xs font-mono text-oat-700 border-t border-oat-200 pt-4">
+          <li class="flex items-center gap-2"><span class="text-pastel-sage font-bold">✦</span> Self-Healing API &amp; Data Pipeline Bots</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-sage font-bold">✦</span> Cognitive Unstructured Document Parsing</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-sage font-bold">✦</span> Human-in-the-Loop Escalation Guardrails</li>
+        </ul>
+      </div>
+
+      <!-- Pillar 4: Spatial Vision & Sensor Fusion -->
+      <div class="tech-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-pastel-claySoft border border-oat-300 flex items-center justify-center text-pastel-clay mb-6">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-display text-2xl font-bold text-oat-950">Spatial Vision &amp; Sensor Fusion</h3>
+          <span class="text-xs font-mono text-pastel-clay font-semibold bg-pastel-claySoft px-2.5 py-0.5 rounded">04 // SENSORY</span>
+        </div>
+        <p class="text-oat-700 text-sm leading-relaxed mb-6 font-normal">
+          High-frequency 3D point-cloud generation, LiDAR telemetry fusion, visual odometry, and SLAM mapping for robotic autonomy in dynamic industrial environments.
+        </p>
+        <ul class="space-y-2 text-xs font-mono text-oat-700 border-t border-oat-200 pt-4">
+          <li class="flex items-center gap-2"><span class="text-pastel-clay font-bold">✦</span> Real-time LiDAR &amp; RGB-D Telemetry Fusion</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-clay font-bold">✦</span> Microsecond Defect &amp; Anomaly Detection</li>
+          <li class="flex items-center gap-2"><span class="text-pastel-clay font-bold">✦</span> Visual SLAM &amp; Spatial Localization</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Execution Architecture Flow -->
+  <section id="architecture" class="py-24 px-6 max-w-7xl mx-auto border-t border-oat-200">
+    <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oat-100 border border-oat-200 text-xs font-mono text-oat-700">
+        <span>PIPELINE ARCHITECTURE</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-oat-950 tracking-tight">
+        The Autonomous Execution Loop
+      </h2>
+      <p class="text-oat-700 text-sm">
+        From raw microsecond sensory signals into deterministic real-world actions.
+      </p>
+    </div>
+
+    <!-- 4 Pipeline Nodes in Line -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+      
+      <div class="p-6 rounded-xl tech-card border-t-4 border-t-pastel-ice">
+        <div class="font-mono text-xs text-pastel-ice font-bold mb-2">01 // SENSE</div>
+        <h4 class="font-display font-bold text-lg text-oat-950 mb-2">Perception &amp; Ingest</h4>
+        <p class="text-xs text-oat-700 leading-relaxed">
+          LiDAR, spatial cameras, sensor buses, and enterprise webhooks ingested at sub-millisecond edge intervals.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-xl tech-card border-t-4 border-t-pastel-lavender">
+        <div class="font-mono text-xs text-pastel-lavender font-bold mb-2">02 // REASON</div>
+        <h4 class="font-display font-bold text-lg text-oat-950 mb-2">Cognitive Core</h4>
+        <p class="text-xs text-oat-700 leading-relaxed">
+          Agent swarms deconstruct objectives, evaluate spatial world models, and plan optimal action trees.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-xl tech-card border-t-4 border-t-pastel-sage">
+        <div class="font-mono text-xs text-pastel-sage font-bold mb-2">03 // ACTUATE</div>
+        <h4 class="font-display font-bold text-lg text-oat-950 mb-2">Physical / Digital Action</h4>
+        <p class="text-xs text-oat-700 leading-relaxed">
+          Kinematics generators translate commands to robot joints or software bot endpoints within safety boundaries.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-xl tech-card border-t-4 border-t-pastel-clay">
+        <div class="font-mono text-xs text-pastel-clay font-bold mb-2">04 // CALIBRATE</div>
+        <h4 class="font-display font-bold text-lg text-oat-950 mb-2">Adaptive Feedback</h4>
+        <p class="text-xs text-oat-700 leading-relaxed">
+          Continuous telemetry evaluates real-world results, updating memory weights to prevent performance drift.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About Section ("The Meaning of Nirmit") -->
+  <section id="about" class="py-24 px-6 max-w-7xl mx-auto border-t border-oat-200">
+    <div class="tech-card rounded-3xl p-8 sm:p-14 border border-oat-300">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <div class="lg:col-span-8 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oat-50 border border-oat-200 text-xs font-mono text-oat-700">
+            <span>PHILOSOPHY &amp; ETHOS</span>
+          </div>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold text-oat-950 tracking-tight leading-snug">
+            Built from Purpose. <br>
+            <span class="text-oat-700">Bringing Form to the Autonomous Future.</span>
+          </h2>
+          <p class="text-oat-700 text-sm sm:text-base leading-relaxed">
+            In Sanskrit, <strong class="text-oat-950 font-semibold">Nirmita (निर्मित)</strong> means <em>constructed, fashioned, and brought into tangible existence with clear design intent</em>.
+          </p>
+          <p class="text-oat-700 text-sm leading-relaxed">
+            NirmitAI was founded to bridge the critical divide between abstract neural networks and physical reality. We build the operational brains and reflexes for machines that walk, grasp, calculate, and automate with absolute reliability.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-2 text-xs font-mono text-oat-700">
+            <span class="px-3 py-1.5 rounded-lg bg-oat-50 border border-oat-300">📍 Gurugram, India</span>
+            <span class="px-3 py-1.5 rounded-lg bg-oat-50 border border-oat-300">🌐 nirmitai.com</span>
+            <span class="px-3 py-1.5 rounded-lg bg-oat-50 border border-oat-300">⚡ GitHub: @nirmitaidotcom</span>
+          </div>
+        </div>
+
+        <!-- Architectural Emblem -->
+        <div class="lg:col-span-4 flex justify-center">
+          <div class="w-56 h-56 rounded-2xl bg-oat-50 border border-oat-300 p-8 flex flex-col items-center justify-center text-center shadow-sm relative">
+            <span class="font-display font-extrabold text-5xl text-oat-950">N</span>
+            <span class="font-mono text-xs text-pastel-sage font-semibold mt-2 tracking-widest uppercase">NirmitAI</span>
+            <span class="text-[10px] font-mono text-oat-500 mt-1">EST. 2026 // INDIA</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Collaboration Section -->
+  <section id="contact" class="py-24 px-6 max-w-4xl mx-auto text-center space-y-8">
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oat-100 border border-oat-200 text-xs font-mono text-oat-700">
+        <span>TRANSMIT DISPATCH</span>
+      </div>
+      <h2 class="font-display text-3xl sm:text-5xl font-bold text-oat-950 tracking-tight">
+        Build the Autonomous Frontier
+      </h2>
+      <p class="text-oat-700 text-sm sm:text-base max-w-xl mx-auto">
+        Whether you are deploying robotic kinematics, autonomous bot fleets, or custom agent swarms, NirmitAI partners with forward-thinking teams.
+      </p>
+    </div>
+
+    <!-- Clean Architectural Form -->
+    <div class="tech-card p-8 rounded-2xl text-left border border-oat-300 max-w-xl mx-auto space-y-4">
+      <form id="contact-form" onsubmit="handleDispatch(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-mono text-oat-700 mb-1">Your Name / Organization</label>
+          <input required type="text" id="disp-name" placeholder="Acme Robotics Corp" class="w-full px-4 py-2.5 rounded-lg bg-oat-50 border border-oat-300 text-oat-950 text-sm focus:outline-none focus:border-oat-900 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-oat-700 mb-1">Email Address</label>
+          <input required type="email" id="disp-email" placeholder="alex@company.com" class="w-full px-4 py-2.5 rounded-lg bg-oat-50 border border-oat-300 text-oat-950 text-sm focus:outline-none focus:border-oat-900 transition-colors" />
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-oat-700 mb-1">Project Domain</label>
+          <select id="disp-scope" class="w-full px-4 py-2.5 rounded-lg bg-oat-50 border border-oat-300 text-oat-950 text-sm focus:outline-none focus:border-oat-900 transition-colors">
+            <option value="Embodied Robotics & Kinematics">Embodied Robotics &amp; Kinematics</option>
+            <option value="Autonomous Multi-Agent Swarms">Autonomous Multi-Agent Swarms</option>
+            <option value="Enterprise Process Bots">Enterprise Process Bots &amp; RPA</option>
+            <option value="Strategic AI Engineering">General Inquiry / Strategic R&amp;D</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-oat-700 mb-1">Brief Overview</label>
+          <textarea id="disp-message" rows="3" placeholder="Describe the physical or digital automation objective..." class="w-full px-4 py-2.5 rounded-lg bg-oat-50 border border-oat-300 text-oat-950 text-sm focus:outline-none focus:border-oat-900 transition-colors"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-lg bg-oat-900 hover:bg-oat-700 text-oat-50 font-mono text-xs tracking-wider transition-all shadow-md">
+          // SEND DISPATCH VIA MAILTO
+        </button>
+      </form>
+
+      <div class="pt-4 border-t border-oat-200 text-center">
+        <span class="text-xs text-oat-500">Direct transmission: </span>
+        <a href="mailto:sumityadav329@gmail.com" class="text-xs font-mono text-oat-900 font-semibold hover:underline">sumityadav329@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-oat-200 py-12 px-6 max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-oat-500 font-mono">
+      <div class="flex items-center gap-3">
+        <span class="font-display font-bold text-oat-950 text-sm">Nirmit<span class="text-pastel-sage">AI</span></span>
+        <span class="text-oat-300">/</span>
+        <span>nirmitai.com</span>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="https://github.com/nirmitaidotcom" target="_blank" class="hover:text-oat-950 transition-colors">GitHub: @nirmitaidotcom</a>
+        <a href="https://nirmitai.com" class="hover:text-oat-950 transition-colors">Domain: nirmitai.com</a>
+      </div>
+
+      <div class="text-oat-400">
+        © 2026 NirmitAI. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Real-time Interactive Telemetry Script -->
+  <script>
+    // Tab switching in telemetry deck
+    function switchDeckTab(tab) {
+      document.querySelectorAll('.deck-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.deck-btn').forEach(btn => {
+        btn.classList.remove('bg-oat-900', 'text-oat-50');
+        btn.classList.add('bg-oat-50', 'text-oat-700');
+      });
+
+      const pane = document.getElementById('deck-pane-' + tab);
+      const btn = document.getElementById('deck-btn-' + tab);
+      if (pane) pane.classList.remove('hidden');
+      if (btn) {
+        btn.classList.remove('bg-oat-50', 'text-oat-700');
+        btn.classList.add('bg-oat-900', 'text-oat-50');
+      }
+    }
+
+    // Dynamic telemetry updates (subtle, realistic variation)
+    setInterval(() => {
+      const j1 = document.getElementById('deck-j1');
+      const j2 = document.getElementById('deck-j2');
+      const j3 = document.getElementById('deck-j3');
+      if (j1) j1.innerText = (41.5 + Math.random() * 3.5).toFixed(1) + '°';
+      if (j2) j2.innerText = (-19.0 + Math.random() * 2.8).toFixed(1) + '°';
+      if (j3) j3.innerText = (94.0 + Math.random() * 3.2).toFixed(1) + '°';
+
+      const ts = document.getElementById('deck-timestamp');
+      if (ts) {
+        const d = new Date();
+        ts.innerText = d.toISOString().substring(11, 23) + ' UTC';
+      }
+    }, 1200);
+
+    // Pulse Diagnostic Function
+    function triggerDiagnosticPulse() {
+      const logContainer = document.getElementById('deck-agent-logs');
+      if (logContainer) {
+        const item = document.createElement('div');
+        item.className = "flex gap-2 text-pastel-sage font-semibold";
+        item.innerHTML = `<span>[Diagnostic]</span> Telemetry pulse verified: 128 nodes nominal at ${(0.72 + Math.random()*0.15).toFixed(2)}ms latency.`;
+        logContainer.prepend(item);
+      }
+    }
+
+    // Dispatch handler
+    function handleDispatch(e) {
+      e.preventDefault();
+      const name = document.getElementById('disp-name').value;
+      const email = document.getElementById('disp-email').value;
+      const scope = document.getElementById('disp-scope').value;
+      const msg = document.getElementById('disp-message').value;
+
+      const subject = encodeURIComponent(`[NirmitAI Dispatch] ${scope} - ${name}`);
+      const body = encodeURIComponent(`Name/Org: ${name}\nEmail: ${email}\nDomain Scope: ${scope}\n\nProject Scope:\n${msg}`);
+
+      window.location.href = `mailto:sumityadav329@gmail.com?subject=${subject}&body=${body}`;
+    }
+  </script>
+</body>
+</html>
