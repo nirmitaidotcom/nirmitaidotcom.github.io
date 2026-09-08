@@ -1,0 +1,16 @@
+{
+  "name": "Nirmit AI",
+  "short_name": "Nirmit AI",
+  "description": "Autonomous AI, Robotics & Practical Intelligence",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#FAF7F2",
+  "background_color": "#FAF7F2",
+  "display": "standalone"
+}
