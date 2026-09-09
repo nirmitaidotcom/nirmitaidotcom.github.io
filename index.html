@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="assets/favicon.svg" />
   <meta name="apple-mobile-web-app-title" content="Nirmit AI" />
   <link rel="manifest" href="site.webmanifest" />
-  <meta name="theme-color" content="#FAF7F2" />
+  <meta name="theme-color" content="#FAF8F5" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Nirmit AI" />
@@ -23,10 +23,10 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:image" content="https://nirmitai.com/assets/favicon.svg" />
 
-  <!-- Fonts -->
+  <!-- Fonts (Feynman Typography Stack: IBM Plex Sans, IBM Plex Mono, VT323) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=VT323&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -36,30 +36,40 @@
         extend: {
           colors: {
             oat: {
-              50: '#FAF7F2',   // Primary canvas
-              100: '#F4EFEA',  // Card background
-              200: '#E6DED5',  // Hairline borders
-              300: '#D5C9BD',  // Secondary borders
-              500: '#8C7D6F',  // Labels & subtle text
-              700: '#4A4139',  // Secondary text
-              900: '#1F1B18',  // Primary carbon text
-              950: '#141210'
+              50: '#FAF8F5',   // Canvas background (warm paper tone matching Feynman)
+              100: '#F5EFEA',  // Subtle tag & pill background
+              150: '#ECE5DC',
+              200: '#E2DCD3',  // Crisp hairline borders
+              300: '#CEC4B5',  // Hover & distinct borders
+              400: '#9C9182',
+              500: '#5F574D',  // High-contrast labels (WCAG AAA compliant)
+              600: '#474037',  // Muted secondary text
+              700: '#2E2721',  // Body text - deeply legible and crisp
+              800: '#201A15',  // Dark body text
+              900: '#14110E',  // Primary carbon text
+              950: '#0B0907'
             },
             pastel: {
-              sage: '#6D8B74',
-              sageSoft: '#E6EEE8',
-              lavender: '#8B80A6',
-              lavenderSoft: '#EFEBF5',
-              ice: '#6A8E9E',
-              iceSoft: '#EAF0F3',
-              clay: '#C57E65',
-              claySoft: '#FAEDE8'
+              sage: '#1E6626',       // Deep botanical green (Feynman signature primary)
+              sageSoft: '#EBF3EC',   // Soft sage pill
+              sageBorder: '#C2DEC5',
+              lavender: '#4D4284',   // High-contrast slate lavender
+              lavenderSoft: '#EFEFF8',
+              lavenderBorder: '#CCC7E8',
+              ice: '#1A5D75',        // High-contrast deep cyan/ice
+              iceSoft: '#E6F2F7',
+              iceBorder: '#BDE0EC',
+              clay: '#993B1E',       // High-contrast terracotta clay
+              claySoft: '#FAECE6',
+              clayBorder: '#F0C5B5'
             }
           },
           fontFamily: {
-            display: ['Syne', 'sans-serif'],
-            body: ['Plus Jakarta Sans', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
+            sans: ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            display: ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            body: ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+            vt: ['"VT323"', 'monospace']
           }
         }
       }
@@ -67,29 +77,37 @@
   </script>
 
   <style>
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
     body {
-      background-color: #FAF7F2;
-      color: #1F1B18;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF8F5;
+      color: #14110E;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      letter-spacing: -0.01em;
     }
     .grid-bg {
       background-size: 32px 32px;
       background-image: 
-        linear-gradient(to right, rgba(140, 125, 111, 0.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(140, 125, 111, 0.06) 1px, transparent 1px);
+        linear-gradient(to right, rgba(95, 87, 77, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(95, 87, 77, 0.05) 1px, transparent 1px);
     }
     .card {
-      background: #F4EFEA;
-      border: 1px solid #E6DED5;
-      transition: all 0.2s ease;
+      background: #FFFFFF;
+      border: 1px solid #E2DCD3;
+      box-shadow: 0 1px 3px rgba(20, 17, 14, 0.04);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .card:hover {
-      border-color: #D5C9BD;
+      border-color: #CEC4B5;
+      box-shadow: 0 6px 20px rgba(20, 17, 14, 0.07);
       transform: translateY(-2px);
     }
   </style>
 </head>
-<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-pastel-sageSoft selection:text-oat-900 relative">
+<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-pastel-sageSoft selection:text-pastel-sage relative">
 
   <!-- Neural Network Breathing Canvas -->
   <canvas id="neural-canvas" class="fixed inset-0 pointer-events-none z-0 w-full h-full"></canvas>
@@ -106,14 +124,15 @@
         />
         <div class="flex items-baseline gap-2">
           <span class="font-display font-bold text-base sm:text-lg tracking-tight text-oat-950">Nirmit <span class="text-pastel-sage">AI</span></span>
-          <span class="text-[10px] font-mono text-oat-500 hidden sm:inline">निर्मित</span>
+          <span class="font-vt text-lg text-pastel-sage tracking-wider px-1.5 py-0.5 rounded bg-pastel-sageSoft border border-pastel-sageBorder hidden sm:inline-block leading-none">research</span>
+          <span class="text-[11px] font-mono text-oat-500 hidden md:inline">निर्मित</span>
         </div>
       </a>
 
-      <nav class="flex items-center gap-4 sm:gap-6 text-xs font-mono text-oat-700">
-        <a href="#initiatives" class="hover:text-oat-950 transition-colors py-1">What We Do</a>
-        <a href="#team" class="hover:text-oat-950 transition-colors py-1">Team</a>
-        <a href="#contact" class="hover:text-oat-950 transition-colors py-1">Contact</a>
+      <nav class="flex items-center gap-4 sm:gap-6 text-xs font-mono font-medium text-oat-700">
+        <a href="#initiatives" class="hover:text-oat-950 hover:underline transition-colors py-1">What We Do</a>
+        <a href="#team" class="hover:text-oat-950 hover:underline transition-colors py-1">Team</a>
+        <a href="#contact" class="hover:text-oat-950 hover:underline transition-colors py-1">Contact</a>
       </nav>
 
     </div>
@@ -124,19 +143,21 @@
 
     <!-- Hero Section -->
     <section class="space-y-4 sm:space-y-6 pt-2 sm:pt-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-oat-100 border border-oat-200 text-[11px] sm:text-xs font-mono text-oat-700 max-w-full truncate">
-        <span class="w-1.5 h-1.5 rounded-full bg-pastel-sage flex-shrink-0"></span>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-oat-200 shadow-xs text-[11px] sm:text-xs font-mono font-medium text-oat-700 max-w-full truncate">
+        <span class="w-1.5 h-1.5 rounded-full bg-pastel-sage flex-shrink-0 animate-pulse"></span>
+        <span class="font-vt text-sm text-pastel-sage tracking-wider">EST. 2025</span>
+        <span class="text-oat-300">/</span>
         <span class="truncate">GURUGRAM, INDIA · RESEARCH &amp; DEVELOPMENT</span>
       </div>
 
-      <h1 class="font-display text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-oat-950 leading-[1.12]">
+      <h1 class="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-oat-950 leading-[1.14]">
         Purposeful AI, Robotics &amp; <br class="hidden sm:inline">
-        <span class="text-oat-700 underline decoration-pastel-sage decoration-2 sm:decoration-3 underline-offset-4 sm:underline-offset-8">
+        <span class="text-oat-900 underline decoration-pastel-sage decoration-2 sm:decoration-3 underline-offset-4 sm:underline-offset-8">
           Everyday Automation
         </span>.
       </h1>
 
-      <p class="text-sm sm:text-base md:text-lg text-oat-700 max-w-2xl font-light leading-relaxed">
+      <p class="text-base sm:text-lg md:text-xl text-oat-700 max-w-2xl font-normal leading-relaxed">
         Nirmit AI develops autonomous intelligence systems, personal assistance robots, custom web apps, and practical AI tools that make emerging technology effortlessly usable for everyone.
       </p>
     </section>
@@ -144,8 +165,8 @@
     <!-- What We Do / Current Initiatives -->
     <section id="initiatives" class="space-y-6 sm:space-y-8">
       <div>
-        <span class="text-xs font-mono text-oat-500 uppercase tracking-wider">What We Do</span>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-oat-950 mt-1">Active Initiatives &amp; Services</h2>
+        <span class="text-xs font-mono font-semibold text-oat-500 uppercase tracking-wider">What We Do</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-oat-950 mt-1">Active Initiatives &amp; Services</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -153,11 +174,11 @@
         <!-- Initiative 1 -->
         <div class="card p-5 sm:p-7 rounded-2xl space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono text-pastel-clay font-medium bg-pastel-claySoft px-2.5 py-0.5 rounded">UNDER DEVELOPMENT</span>
-            <span class="text-[11px] font-mono text-oat-500">01</span>
+            <span class="text-[11px] font-mono font-semibold text-pastel-clay bg-pastel-claySoft border border-pastel-clayBorder px-2.5 py-0.5 rounded">UNDER DEVELOPMENT</span>
+            <span class="text-lg font-vt text-oat-400">01</span>
           </div>
-          <h3 class="font-display text-lg sm:text-xl font-bold text-oat-950">Autonomous AI Trading Agent</h3>
-          <p class="text-sm text-oat-700 leading-relaxed font-light">
+          <h3 class="font-display text-lg sm:text-xl font-bold tracking-tight text-oat-950">Autonomous AI Trading Agent</h3>
+          <p class="text-sm sm:text-base text-oat-700 leading-relaxed font-normal">
             An intelligent, autonomous system built to synthesize market data, assess quantitative risks, and execute automated trading strategies with algorithmic precision.
           </p>
         </div>
@@ -165,11 +186,11 @@
         <!-- Initiative 2 -->
         <div class="card p-5 sm:p-7 rounded-2xl space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono text-pastel-clay font-medium bg-pastel-claySoft px-2.5 py-0.5 rounded">UNDER DEVELOPMENT</span>
-            <span class="text-[11px] font-mono text-oat-500">02</span>
+            <span class="text-[11px] font-mono font-semibold text-pastel-clay bg-pastel-claySoft border border-pastel-clayBorder px-2.5 py-0.5 rounded">UNDER DEVELOPMENT</span>
+            <span class="text-lg font-vt text-oat-400">02</span>
           </div>
-          <h3 class="font-display text-lg sm:text-xl font-bold text-oat-950">Physical Robot for Personal Assistance</h3>
-          <p class="text-sm text-oat-700 leading-relaxed font-light">
+          <h3 class="font-display text-lg sm:text-xl font-bold tracking-tight text-oat-950">Physical Robot for Personal Assistance</h3>
+          <p class="text-sm sm:text-base text-oat-700 leading-relaxed font-normal">
             An embodied physical robot engineered for daily personal assistance. Combining spatial perception, responsive mechanics, and voice intelligence to help with real-world tasks.
           </p>
         </div>
@@ -177,11 +198,11 @@
         <!-- Initiative 3 -->
         <div class="card p-5 sm:p-7 rounded-2xl space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono text-pastel-sage font-medium bg-pastel-sageSoft px-2.5 py-0.5 rounded">ACTIVE SERVICE</span>
-            <span class="text-[11px] font-mono text-oat-500">03</span>
+            <span class="text-[11px] font-mono font-semibold text-pastel-sage bg-pastel-sageSoft border border-pastel-sageBorder px-2.5 py-0.5 rounded">ACTIVE SERVICE</span>
+            <span class="text-lg font-vt text-oat-400">03</span>
           </div>
-          <h3 class="font-display text-lg sm:text-xl font-bold text-oat-950">Web Applications &amp; Websites</h3>
-          <p class="text-sm text-oat-700 leading-relaxed font-light">
+          <h3 class="font-display text-lg sm:text-xl font-bold tracking-tight text-oat-950">Web Applications &amp; Websites</h3>
+          <p class="text-sm sm:text-base text-oat-700 leading-relaxed font-normal">
             We design and build ultra-fast, modern web applications, bespoke landing pages, and scalable digital products tailored to business workflows.
           </p>
         </div>
@@ -189,11 +210,11 @@
         <!-- Initiative 4 -->
         <div class="card p-5 sm:p-7 rounded-2xl space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-mono text-pastel-sage font-medium bg-pastel-sageSoft px-2.5 py-0.5 rounded">ACTIVE SERVICE</span>
-            <span class="text-[11px] font-mono text-oat-500">04</span>
+            <span class="text-[11px] font-mono font-semibold text-pastel-sage bg-pastel-sageSoft border border-pastel-sageBorder px-2.5 py-0.5 rounded">ACTIVE SERVICE</span>
+            <span class="text-lg font-vt text-oat-400">04</span>
           </div>
-          <h3 class="font-display text-lg sm:text-xl font-bold text-oat-950">AI for Non-Tech Individuals</h3>
-          <p class="text-sm text-oat-700 leading-relaxed font-light">
+          <h3 class="font-display text-lg sm:text-xl font-bold tracking-tight text-oat-950">AI for Non-Tech Individuals</h3>
+          <p class="text-sm sm:text-base text-oat-700 leading-relaxed font-normal">
             We demystify artificial intelligence for everyday people and non-technical teams—helping individuals adopt daily AI tools to simplify their work, save hours, and boost productivity.
           </p>
         </div>
@@ -204,18 +225,18 @@
     <!-- Leadership / Team Section -->
     <section id="team" class="space-y-8 sm:space-y-10">
       <div>
-        <span class="text-xs font-mono text-oat-500 uppercase tracking-wider">Leadership &amp; Team</span>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-oat-950 mt-1">Founding Team &amp; Collaborators</h2>
+        <span class="text-xs font-mono font-semibold text-oat-500 uppercase tracking-wider">Leadership &amp; Team</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-oat-950 mt-1">Founding Team &amp; Collaborators</h2>
       </div>
 
       <!-- Founders -->
       <div class="space-y-3">
-        <span class="text-xs font-mono text-oat-500 uppercase tracking-wider block">Founders</span>
+        <span class="text-xs font-mono font-semibold text-oat-500 uppercase tracking-wider block">Founders</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
 
           <!-- Founder: Sumit Yadav -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
-            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-200 border border-oat-300 flex-shrink-0 flex items-center justify-center">
+            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
               <!-- Image with fallback -->
               <img 
                 src="assets/sumit-yadav.JPG" 
@@ -228,16 +249,16 @@
               </div>
             </div>
             <div class="space-y-1 font-mono text-xs min-w-0 flex-1">
-              <h3 class="font-display text-base sm:text-lg font-bold text-oat-950 truncate">Sumit Yadav</h3>
+              <h3 class="font-display text-base sm:text-lg font-bold tracking-tight text-oat-950 truncate">Sumit Yadav</h3>
               <p class="text-pastel-sage font-semibold uppercase tracking-wide text-[11px]">Founder</p>
               <div class="space-y-0.5 pt-0.5 text-oat-700">
                 <div class="truncate">
-                  <a href="mailto:sumit@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors break-all">
+                  <a href="mailto:sumit@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors font-medium break-all">
                     sumit@nirmitai.com
                   </a>
                 </div>
                 <div>
-                  <a href="tel:+919807036956" class="hover:text-oat-950 underline decoration-oat-300 transition-colors">
+                  <a href="tel:+919807036956" class="hover:text-oat-950 underline decoration-oat-300 transition-colors font-medium">
                     +91 9807036956
                   </a>
                 </div>
@@ -247,7 +268,7 @@
 
           <!-- Co-Founder: Nripendra Kumar Gangwar -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
-            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-200 border border-oat-300 flex-shrink-0 flex items-center justify-center">
+            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
               <!-- Image with fallback -->
               <img 
                 src="assets/nripendra-gangwar.jpg" 
@@ -260,10 +281,10 @@
               </div>
             </div>
             <div class="space-y-1 font-mono text-xs min-w-0 flex-1">
-              <h3 class="font-display text-base sm:text-lg font-bold text-oat-950 truncate">Nripendra K. Gangwar</h3>
+              <h3 class="font-display text-base sm:text-lg font-bold tracking-tight text-oat-950 truncate">Nripendra K. Gangwar</h3>
               <p class="text-pastel-lavender font-semibold uppercase tracking-wide text-[11px]">Co-Founder</p>
               <div class="pt-0.5 text-oat-700 truncate">
-                <a href="mailto:nripendra@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors break-all">
+                <a href="mailto:nripendra@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors font-medium break-all">
                   nripendra@nirmitai.com
                 </a>
               </div>
@@ -276,15 +297,15 @@
       <!-- Design Support (External) -->
       <div class="space-y-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-mono text-oat-500 uppercase tracking-wider">Design &amp; Creative Support</span>
-          <span class="text-[10px] font-mono text-pastel-ice font-medium bg-pastel-iceSoft px-2.5 py-0.5 rounded">EXTERNAL SUPPORT</span>
+          <span class="text-xs font-mono font-semibold text-oat-500 uppercase tracking-wider">Design &amp; Creative Support</span>
+          <span class="text-[10px] font-mono text-pastel-ice font-semibold bg-pastel-iceSoft border border-pastel-iceBorder px-2.5 py-0.5 rounded">EXTERNAL SUPPORT</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
 
           <!-- Ayush Khare -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
-            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-200 border border-oat-300 flex-shrink-0 flex items-center justify-center">
+            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
               <img 
                 src="assets/ayush-khare.jpg" 
                 alt="Ayush Khare" 
@@ -296,10 +317,10 @@
               </div>
             </div>
             <div class="space-y-1 font-mono text-xs min-w-0 flex-1">
-              <h3 class="font-display text-base sm:text-lg font-bold text-oat-950 truncate">Ayush Khare</h3>
+              <h3 class="font-display text-base sm:text-lg font-bold tracking-tight text-oat-950 truncate">Ayush Khare</h3>
               <p class="text-pastel-ice font-semibold uppercase tracking-wide text-[11px]">Design Support <span class="text-oat-500 font-normal">(External)</span></p>
               <div class="pt-0.5 text-oat-700 truncate">
-                <a href="mailto:ayush@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors break-all">
+                <a href="mailto:ayush@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors font-medium break-all">
                   ayush@nirmitai.com
                 </a>
               </div>
@@ -308,7 +329,7 @@
 
           <!-- Diksha Shinde -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
-            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-200 border border-oat-300 flex-shrink-0 flex items-center justify-center">
+            <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
               <img 
                 src="assets/diksha-shinde.jpg" 
                 alt="Diksha Shinde" 
@@ -320,10 +341,10 @@
               </div>
             </div>
             <div class="space-y-1 font-mono text-xs min-w-0 flex-1">
-              <h3 class="font-display text-base sm:text-lg font-bold text-oat-950 truncate">Diksha Shinde</h3>
+              <h3 class="font-display text-base sm:text-lg font-bold tracking-tight text-oat-950 truncate">Diksha Shinde</h3>
               <p class="text-pastel-clay font-semibold uppercase tracking-wide text-[11px]">Design Support <span class="text-oat-500 font-normal">(External)</span></p>
               <div class="pt-0.5 text-oat-700 truncate">
-                <a href="mailto:diksha@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors break-all">
+                <a href="mailto:diksha@nirmitai.com" class="hover:text-oat-950 underline decoration-oat-300 transition-colors font-medium break-all">
                   diksha@nirmitai.com
                 </a>
               </div>
@@ -337,36 +358,36 @@
     <!-- Minimal Contact Section (No Forms) -->
     <section id="contact" class="space-y-6">
       <div>
-        <span class="text-xs font-mono text-oat-500 uppercase tracking-wider">Contact</span>
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-oat-950 mt-1">Get In Touch</h2>
+        <span class="text-xs font-mono font-semibold text-oat-500 uppercase tracking-wider">Contact</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-tight text-oat-950 mt-1">Get In Touch</h2>
       </div>
 
       <div class="card p-6 sm:p-8 rounded-2xl space-y-6">
-        <p class="text-sm text-oat-700 font-light max-w-xl leading-relaxed">
+        <p class="text-sm sm:text-base text-oat-700 font-normal max-w-xl leading-relaxed">
           Whether you are looking to build a custom web app, explore autonomous trading intelligence, collaborate on robotics, or learn how to apply AI in your daily routine—feel free to connect with us directly.
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-1 font-mono text-xs">
-          <div class="p-4 rounded-xl bg-oat-50 border border-oat-200 space-y-1">
-            <span class="text-oat-500 block text-[11px] uppercase tracking-wider">Sumit Yadav</span>
+          <div class="p-4 rounded-xl bg-oat-50/80 border border-oat-200 space-y-1">
+            <span class="text-oat-500 block text-[11px] uppercase tracking-wider font-semibold">Sumit Yadav</span>
             <a href="mailto:sumit@nirmitai.com" class="text-oat-950 font-semibold hover:text-pastel-sage transition-colors block break-all">
               sumit@nirmitai.com
             </a>
-            <a href="tel:+919807036956" class="text-oat-700 hover:text-oat-950 transition-colors block">
+            <a href="tel:+919807036956" class="text-oat-700 hover:text-oat-950 transition-colors block font-medium">
               +91 9807036956
             </a>
           </div>
 
-          <div class="p-4 rounded-xl bg-oat-50 border border-oat-200 space-y-1">
-            <span class="text-oat-500 block text-[11px] uppercase tracking-wider">Nripendra K. Gangwar</span>
+          <div class="p-4 rounded-xl bg-oat-50/80 border border-oat-200 space-y-1">
+            <span class="text-oat-500 block text-[11px] uppercase tracking-wider font-semibold">Nripendra K. Gangwar</span>
             <a href="mailto:nripendra@nirmitai.com" class="text-oat-950 font-semibold hover:text-pastel-lavender transition-colors block break-all">
               nripendra@nirmitai.com
             </a>
-            <span class="text-oat-500 block text-[11px]">Co-Founder</span>
+            <span class="text-oat-600 block text-[11px] font-medium">Co-Founder</span>
           </div>
 
-          <div class="p-4 rounded-xl bg-oat-50 border border-oat-200 space-y-1">
-            <span class="text-oat-500 block text-[11px] uppercase tracking-wider">Design Support</span>
+          <div class="p-4 rounded-xl bg-oat-50/80 border border-oat-200 space-y-1">
+            <span class="text-oat-500 block text-[11px] uppercase tracking-wider font-semibold">Design Support</span>
             <a href="mailto:ayush@nirmitai.com" class="text-oat-950 font-semibold hover:text-pastel-ice transition-colors block break-all">
               ayush@nirmitai.com
             </a>
@@ -375,10 +396,10 @@
             </a>
           </div>
 
-          <div class="p-4 rounded-xl bg-oat-50 border border-oat-200 space-y-1">
-            <span class="text-oat-500 block text-[11px] uppercase tracking-wider">Headquarters &amp; Org</span>
+          <div class="p-4 rounded-xl bg-oat-50/80 border border-oat-200 space-y-1">
+            <span class="text-oat-500 block text-[11px] uppercase tracking-wider font-semibold">Headquarters &amp; Org</span>
             <span class="text-oat-950 font-medium block">Gurugram, India</span>
-            <a href="https://github.com/nirmitaidotcom" target="_blank" class="text-oat-700 hover:text-oat-950 transition-colors block">
+            <a href="https://github.com/nirmitaidotcom" target="_blank" class="text-oat-700 hover:text-oat-950 transition-colors block font-medium">
               github: @nirmitaidotcom
             </a>
           </div>
@@ -389,7 +410,7 @@
   </main>
 
   <!-- Minimal Footer -->
-  <footer class="border-t border-oat-200 py-6 sm:py-8 px-4 sm:px-6 bg-oat-50 text-xs font-mono text-oat-500 relative z-10">
+  <footer class="border-t border-oat-200 py-6 sm:py-8 px-4 sm:px-6 bg-oat-50 text-xs font-mono text-oat-600 relative z-10">
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 text-left">
       <div class="flex items-center gap-2.5">
         <img 
@@ -401,10 +422,10 @@
         <span>·</span>
         <span>nirmitai.com</span>
       </div>
-      <div class="text-[10px] text-oat-500 tracking-wider uppercase">
+      <div class="text-[10px] text-oat-500 tracking-wider uppercase font-semibold">
         ESTABLISHED 2025 · GURUGRAM, INDIA
       </div>
-      <div>
+      <div class="text-oat-500">
         © 2025–2026 Nirmit AI. All rights reserved.
       </div>
     </div>
@@ -421,12 +442,12 @@
       let pulses = [];
       let animId;
 
-      // Sober pastel palette matching the site
+      // Richer scientific contrast palette matching Feynman
       const palette = [
-        { r: 109, g: 139, b: 116 }, // Sage
-        { r: 139, g: 128, b: 166 }, // Lavender
-        { r: 106, g: 142, b: 158 }, // Ice
-        { r: 197, g: 126, b: 101 }  // Clay
+        { r: 30, g: 102, b: 38 },   // Sage / Forest Green (#1E6626)
+        { r: 77, g: 66, b: 132 },   // Lavender (#4D4284)
+        { r: 26, g: 93, b: 117 },   // Ice (#1A5D75)
+        { r: 153, g: 59, b: 30 }    // Clay (#993B1E)
       ];
 
       function resize() {
@@ -498,19 +519,19 @@
         const bodyBob = 2.4 * breath;
         const groundY = cy + 58 * s;
 
-        // Architectural pastel colors
-        const cPlate = `rgba(244, 239, 234, ${(0.92 * alpha).toFixed(3)})`;
-        const cStroke = `rgba(31, 27, 24, ${(0.75 * alpha).toFixed(3)})`;
-        const cHairline = `rgba(140, 125, 111, ${(0.45 * alpha).toFixed(3)})`;
-        const cIce = `rgba(106, 142, 158, ${(0.85 * alpha).toFixed(3)})`;
-        const cSage = `rgba(109, 139, 116, ${(0.85 * alpha).toFixed(3)})`;
-        const cClay = `rgba(197, 126, 101, ${(0.85 * alpha).toFixed(3)})`;
-        const cJoint = `rgba(250, 247, 242, ${(0.95 * alpha).toFixed(3)})`;
+        // Architectural contrast colors
+        const cPlate = `rgba(255, 255, 255, ${(0.96 * alpha).toFixed(3)})`;
+        const cStroke = `rgba(20, 17, 14, ${(0.85 * alpha).toFixed(3)})`;
+        const cHairline = `rgba(95, 87, 77, ${(0.55 * alpha).toFixed(3)})`;
+        const cIce = `rgba(26, 93, 117, ${(0.88 * alpha).toFixed(3)})`;
+        const cSage = `rgba(30, 102, 38, ${(0.88 * alpha).toFixed(3)})`;
+        const cClay = `rgba(153, 59, 30, ${(0.88 * alpha).toFixed(3)})`;
+        const cJoint = `rgba(250, 248, 245, ${(0.96 * alpha).toFixed(3)})`;
 
         // Ambient ground shadow under paws
         ctx.beginPath();
         ctx.ellipse(cx + 4 * s, groundY + 2 * s, 64 * s, 8 * s, 0, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(140, 125, 111, ${(0.12 * alpha).toFixed(3)})`;
+        ctx.fillStyle = `rgba(95, 87, 77, ${(0.14 * alpha).toFixed(3)})`;
         ctx.fill();
 
         // Key anatomical body nodes
@@ -775,11 +796,11 @@
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist < maxDist) {
-              const alpha = (1 - dist / maxDist) * 0.22 * globalBreath;
+              const alpha = (1 - dist / maxDist) * 0.18 * globalBreath;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
-              ctx.strokeStyle = `rgba(140, 125, 111, ${alpha.toFixed(3)})`;
+              ctx.strokeStyle = `rgba(95, 87, 77, ${alpha.toFixed(3)})`;
               ctx.lineWidth = 0.8;
               ctx.stroke();
             }
@@ -863,7 +884,7 @@
             ctx.beginPath();
             ctx.moveTo(closestNode.x, closestNode.y);
             ctx.lineTo(botNodes.headX, botNodes.headY);
-            ctx.strokeStyle = `rgba(106, 142, 158, ${linkAlpha.toFixed(3)})`;
+            ctx.strokeStyle = `rgba(26, 93, 117, ${linkAlpha.toFixed(3)})`;
             ctx.lineWidth = 1;
             ctx.setLineDash([3, 3]);
             ctx.stroke();
