@@ -10,8 +10,15 @@
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
   <link rel="alternate icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="apple-touch-icon" href="assets/favicon.svg" />
-  <meta name="apple-mobile-web-app-title" content="Nirmit AI" />
-  <link rel="manifest" href="site.webmanifest" />
+  <script>
+    if (window.location.protocol.startsWith('http')) {
+      const manifestLink = document.createElement('link');
+      manifestLink.rel = 'manifest';
+      manifestLink.href = 'site.webmanifest';
+      document.head.appendChild(manifestLink);
+    }
+  </script>
+  <noscript><link rel="manifest" href="site.webmanifest" /></noscript>
   <meta name="theme-color" content="#FAF8F5" />
 
   <!-- Open Graph -->
@@ -36,30 +43,30 @@
         extend: {
           colors: {
             oat: {
-              50: '#FAF8F5',   // Canvas background (warm paper tone matching Feynman)
-              100: '#F5EFEA',  // Subtle tag & pill background
+              50: '#FAF8F5',
+              100: '#F5EFEA',
               150: '#ECE5DC',
-              200: '#E2DCD3',  // Crisp hairline borders
-              300: '#CEC4B5',  // Hover & distinct borders
+              200: '#E2DCD3',
+              300: '#CEC4B5',
               400: '#9C9182',
-              500: '#5F574D',  // High-contrast labels (WCAG AAA compliant)
-              600: '#474037',  // Muted secondary text
-              700: '#2E2721',  // Body text - deeply legible and crisp
-              800: '#201A15',  // Dark body text
-              900: '#14110E',  // Primary carbon text
+              500: '#5F574D',
+              600: '#474037',
+              700: '#2E2721',
+              800: '#201A15',
+              900: '#14110E',
               950: '#0B0907'
             },
             pastel: {
-              sage: '#1E6626',       // Deep botanical green (Feynman signature primary)
-              sageSoft: '#EBF3EC',   // Soft sage pill
+              sage: '#1E6626',
+              sageSoft: '#EBF3EC',
               sageBorder: '#C2DEC5',
-              lavender: '#4D4284',   // High-contrast slate lavender
+              lavender: '#4D4284',
               lavenderSoft: '#EFEFF8',
               lavenderBorder: '#CCC7E8',
-              ice: '#1A5D75',        // High-contrast deep cyan/ice
+              ice: '#1A5D75',
               iceSoft: '#E6F2F7',
               iceBorder: '#BDE0EC',
-              clay: '#993B1E',       // High-contrast terracotta clay
+              clay: '#993B1E',
               claySoft: '#FAECE6',
               clayBorder: '#F0C5B5'
             }
@@ -105,33 +112,62 @@
       box-shadow: 0 6px 20px rgba(20, 17, 14, 0.07);
       transform: translateY(-2px);
     }
-    /* Terminal Expanding Animation */
-    #hero-terminal {
-      transition: max-height 0.75s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
-      will-change: max-height;
+
+    /* Terminal Smooth Row-by-Row Opening */
+    .terminal-window {
+      transition: box-shadow 0.4s ease;
     }
-    #hero-terminal.terminal-booting {
-      max-height: 44px;
-    }
-    #hero-terminal.terminal-compact {
-      max-height: 44px;
-    }
-    #hero-terminal.terminal-expanded {
-      max-height: 850px;
-    }
-    #terminal-body-content {
-      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .terminal-compact #terminal-body-content,
-    .terminal-booting #terminal-body-content {
+
+    .term-row {
+      max-height: 0;
       opacity: 0;
-      transform: translateY(-8px);
-      pointer-events: none;
+      overflow: hidden;
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      transform: translateY(14px);
+      transition: max-height 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.45s ease,
+                  transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  margin-top 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  padding 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: max-height, opacity, transform, padding;
     }
-    .terminal-expanded #terminal-body-content {
+
+    .term-row.is-open {
+      max-height: 400px;
       opacity: 1;
       transform: translateY(0);
-      pointer-events: auto;
+    }
+
+    #row-brand.is-open {
+      padding-top: 1.5rem !important;
+      margin-top: 0 !important;
+    }
+    @media (min-width: 640px) {
+      #row-brand.is-open {
+        padding-top: 2.5rem !important;
+      }
+    }
+
+    .term-row:not(:first-child).is-open {
+      margin-top: 1.5rem !important;
+    }
+
+    #row-badges.is-open {
+      padding-bottom: 1.5rem !important;
+    }
+    @media (min-width: 640px) {
+      #row-badges.is-open {
+        padding-bottom: 2.5rem !important;
+      }
+    }
+
+    .term-row.is-settled {
+      max-height: none !important;
+      overflow: visible !important;
+      transform: none !important;
+      transition: none !important;
     }
   </style>
 </head>
@@ -162,134 +198,75 @@
   <!-- Main Content -->
   <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-14 space-y-14 sm:space-y-20 flex-1 relative z-10">
 
-    <!-- Hero Section: Full Terminal CLI Experience -->
-    <section class="space-y-6 pt-2 sm:pt-4">
+    <!-- Hero Section: Sequential Expanding Terminal -->
+    <section class="pt-2 sm:pt-4">
       
-      <!-- Elena-style 3D Brick Terminal Hero Window with Expanding Animation -->
-      <div id="hero-terminal" class="terminal-booting w-full max-w-4xl rounded-2xl bg-[#0B0E0C] border border-[#222E25] shadow-[0_16px_48px_rgba(11,14,12,0.25)] overflow-hidden font-mono text-xs">
+      <!-- Terminal Window with Sequential Expand Animation -->
+      <div id="hero-terminal" class="terminal-window w-full max-w-4xl rounded-2xl bg-[#0B0E0C] border border-[#222E25] shadow-[0_20px_60px_rgba(11,14,12,0.35)] font-mono overflow-hidden">
         
-        <!-- Terminal Titlebar -->
-        <div class="flex items-center justify-between px-3.5 sm:px-4 py-2 bg-[#121714] border-b border-[#222E25] select-none">
-          <div class="flex items-center gap-2 min-w-0">
-            <span class="w-3 h-3 rounded-full bg-[#EF4444] inline-block cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleTerminalExpand(false)" title="Compact"></span>
-            <span class="w-3 h-3 rounded-full bg-[#F59E0B] inline-block cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleTerminalExpand()" title="Toggle Size"></span>
-            <span class="w-3 h-3 rounded-full bg-[#10B981] inline-block cursor-pointer hover:opacity-80 transition-opacity" onclick="toggleTerminalExpand(true)" title="Expand"></span>
-            <span class="ml-2 font-mono text-xs text-zinc-400 truncate hidden sm:inline">
-              📁 nirmit — autonomous ai — robotics ◂ nirmit-cli — 77x23
-            </span>
-            <span class="ml-1 font-mono text-xs text-zinc-400 truncate sm:hidden">
-              nirmit-cli — 77x23
+        <!-- macOS Terminal Titlebar -->
+        <div class="flex items-center justify-between px-4 py-3 bg-[#121714] border-b border-[#222E25] select-none">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-[#EF4444] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#F59E0B] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#10B981] inline-block"></span>
+            <span class="ml-2 text-xs text-zinc-400 font-mono hidden sm:inline">
+              📁 nirmit-cli — v2.5
             </span>
           </div>
 
-          <!-- Controls: Expand/Compact Toggle & Language Switcher -->
-          <div class="flex items-center gap-2 text-[11px] font-mono">
-            <button id="terminal-expand-btn" onclick="toggleTerminalExpand()" class="px-2 py-0.5 rounded text-zinc-400 hover:text-emerald-300 hover:bg-[#1A231C] border border-[#222E25] transition-colors flex items-center gap-1" title="Toggle Compact / Expanded Terminal">
-              <span id="terminal-expand-icon">⤡</span>
-              <span id="terminal-expand-label" class="hidden sm:inline">Compact</span>
-            </button>
-            <div class="h-3 w-px bg-zinc-700 select-none"></div>
-            <div class="flex items-center gap-1">
-              <button id="lang-btn-en" onclick="setTerminalLang('en')" class="px-2 py-0.5 rounded transition-colors bg-[#1E2921] text-emerald-400 font-semibold border border-emerald-500/30">
-                EN
-              </button>
-              <button id="lang-btn-hi" onclick="setTerminalLang('hi')" class="px-2 py-0.5 rounded transition-colors text-zinc-400 hover:text-zinc-200 border border-transparent">
-                हिन्दी
-              </button>
-            </div>
+          <div class="flex items-center gap-2 text-xs font-mono">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 text-[11px] font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              ONLINE
+            </span>
           </div>
         </div>
 
         <!-- Terminal Body -->
-        <div id="terminal-body-content" class="p-4 sm:p-5 space-y-4 text-[#DCE7E0] leading-relaxed relative bg-[radial-gradient(#16221A_1px,transparent_1px)] [background-size:20px_20px]">
+        <div class="px-6 sm:px-10 text-[#DCE7E0] leading-relaxed relative bg-[radial-gradient(#16221A_1px,transparent_1px)] [background-size:24px_24px]">
           
-          <!-- 3D Brick Art Brand Header -->
-          <div class="space-y-2">
-            <div id="terminal-brick-en" class="block max-w-[280px] sm:max-w-[340px]">
-              <img src="assets/brick-nirmit-en.svg" alt="NIRMIT AI 3D Brick Logo" class="w-full h-auto block select-none" />
+          <!-- ROW 1: NIRMIT AI (Starts collapsed & completely hidden, unveils first) -->
+          <div id="row-brand" class="term-row pt-6 sm:pt-10">
+            <div class="max-w-[340px] sm:max-w-[480px] md:max-w-[560px] select-none">
+              <img src="assets/brick-nirmit-en.svg" alt="NIRMIT AI" width="404" height="86" class="w-full h-auto block select-none" />
             </div>
-            <div id="terminal-brick-hi" class="hidden max-w-[280px] sm:max-w-[340px]">
-              <img src="assets/brick-nirmit-hi.svg" alt="निर्मित एआई 3D Brick Logo" class="w-full h-auto block select-none" />
-            </div>
+          </div>
 
-            <!-- Subtitle lines (matching Elena CLI header) -->
-            <div class="space-y-0.5 text-xs sm:text-sm font-mono pt-0.5">
-              <div id="hero-title-text" class="text-zinc-200 font-semibold">
-                Purposeful AI, Robotics &amp; Everyday Automation <span class="text-emerald-400 font-normal">v2.5</span>
+          <!-- ROW 2: HEADLINE & SUBTITLE (Opens slowly after Row 1) -->
+          <div id="row-headline" class="term-row space-y-2">
+            <h1 class="font-display text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-tight">
+              Preparing for Future.
+            </h1>
+            <p class="text-base sm:text-xl text-emerald-400 font-mono font-medium">
+              Autonomous AI · Robotics · Everyday Automation
+            </p>
+          </div>
+
+          <!-- ROW 3: INTERACTIVE CLI COMMAND BAR (Opens slowly after Row 2) -->
+          <div id="row-cli" class="term-row">
+            <div class="p-4 sm:p-5 rounded-xl bg-[#121714] border border-[#222E25] space-y-2">
+              <div class="flex items-center gap-3 text-sm sm:text-base font-mono">
+                <span class="text-emerald-400 font-bold text-lg select-none">❯</span>
+                <span class="text-zinc-500 font-semibold select-none">$</span>
+                <span id="cli-command" class="text-emerald-300 font-semibold tracking-wide"></span>
+                <span id="cli-cursor" class="inline-block w-2.5 h-5 bg-emerald-400 align-middle animate-pulse"></span>
               </div>
-              <div class="text-emerald-400/90 text-xs">
-                <a href="https://nirmitai.com" class="hover:underline">https://nirmitai.com</a>
-                <span class="text-zinc-600 mx-1.5">·</span>
-                <span class="text-zinc-400">Gurugram, India</span>
+              <div id="cli-output" class="text-xs sm:text-sm text-zinc-300 font-mono min-h-[28px] flex items-center pl-7">
+                <!-- Dynamically typed execution feedback -->
               </div>
             </div>
           </div>
 
-          <!-- Mission & Status Row (Compact Side-by-Side) -->
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-4 text-xs font-mono border-t border-[#1C261F] pt-3">
-            <div class="flex items-center gap-2 text-amber-200/90">
-              <span class="text-[#E5855E] select-none">▮</span>
-              <span class="text-zinc-400 font-semibold" id="cli-mission-label">Mission:</span>
-              <span class="text-emerald-300 font-medium" id="cli-mission-val">preparing for future</span>
-            </div>
-
-            <div class="flex items-center gap-2 text-zinc-400 text-[11px] sm:text-xs">
-              <span class="text-[#E5855E] select-none">▮</span>
-              <span class="text-zinc-400 font-semibold" id="cli-status-label">Status:</span>
-              <span class="text-zinc-300" id="cli-status-val">Kinematics 60Hz · Spatial OK · 38μs Quant</span>
-            </div>
-          </div>
-
-          <!-- CLI Interactive Options & Features -->
-          <div class="space-y-1.5 text-xs sm:text-[13px] font-mono border-t border-[#1C261F] pt-3">
-            <div class="flex items-center justify-between text-amber-200/90">
-              <div class="flex items-center gap-2">
-                <span class="text-[#E5855E] select-none">▮</span>
-                <span class="text-zinc-400 font-semibold" id="cli-initiatives-label">Core Initiatives:</span>
-              </div>
-              <div class="text-[11px] text-zinc-500 font-mono hidden sm:flex items-center gap-2">
-                <span>↑↓ navigate</span>
-                <span>·</span>
-                <span>↵ select</span>
-                <span>·</span>
-                <span class="text-zinc-600">[TAB] toggle language</span>
-              </div>
-            </div>
-
-            <!-- Initiative List with Active Selector -->
-            <div id="cli-options-list" class="space-y-1 pl-3 text-zinc-300 font-mono text-xs sm:text-[13px]">
-              <div class="cli-opt flex items-center gap-2 text-emerald-300 font-semibold cursor-pointer py-0.5" onclick="selectInitiative(0, true)">
-                <span class="cli-pointer text-emerald-400 flex-shrink-0">❯</span>
-                <span id="cli-opt-text-0" class="hover:underline truncate">Autonomous AI Trading Agent (Algorithmic Precision)</span>
-              </div>
-              <div class="cli-opt flex items-center gap-2 text-zinc-400 cursor-pointer py-0.5" onclick="selectInitiative(1, true)">
-                <span class="cli-pointer opacity-0 flex-shrink-0">❯</span>
-                <span id="cli-opt-text-1" class="hover:underline truncate">Physical Robot for Personal Assistance (Spatial Perception &amp; Kinematics)</span>
-              </div>
-              <div class="cli-opt flex items-center gap-2 text-zinc-400 cursor-pointer py-0.5" onclick="selectInitiative(2, true)">
-                <span class="cli-pointer opacity-0 flex-shrink-0">❯</span>
-                <span id="cli-opt-text-2" class="hover:underline truncate">Web Applications &amp; Websites (High-Performance Modern Platforms)</span>
-              </div>
-              <div class="cli-opt flex items-center gap-2 text-zinc-400 cursor-pointer py-0.5" onclick="selectInitiative(3, true)">
-                <span class="cli-pointer opacity-0 flex-shrink-0">❯</span>
-                <span id="cli-opt-text-3" class="hover:underline truncate">AI for Non-Tech Individuals (Accessible Everyday Automation)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Live Executing Terminal Output & Typewriter Telemetry -->
-          <div class="border-t border-[#1C261F] pt-3 space-y-1.5">
-            <!-- Command Input Line -->
-            <div class="flex items-center gap-2 flex-wrap text-xs sm:text-[13px]">
-              <span class="text-emerald-400 font-bold select-none">❯</span>
-              <span class="text-zinc-300 font-semibold select-none">$</span>
-              <span id="cli-command" class="text-emerald-300 font-medium"></span>
-              <span id="cli-cursor" class="inline-block w-2 h-3.5 bg-emerald-400 align-middle animate-pulse"></span>
-            </div>
-
-            <!-- Execution Logs (Compact Height) -->
-            <div id="cli-output" class="space-y-1 text-[11px] sm:text-xs pt-0.5 font-mono min-h-[72px] sm:min-h-[80px]">
-              <!-- Dynamically populated via JS animation -->
+          <!-- ROW 4: ACTION & HIGHLIGHT BADGES (Opens slowly after Row 3) -->
+          <div id="row-badges" class="term-row pb-6 sm:pb-10">
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 font-mono text-xs sm:text-sm">
+              <a href="#initiatives" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 transition-colors font-semibold">
+                Explore 4 Initiatives ↓
+              </a>
+              <span class="px-3.5 py-2 rounded-lg bg-[#141C16] text-zinc-300 border border-[#222E25]">⚡ Kinematics 60Hz</span>
+              <span class="px-3.5 py-2 rounded-lg bg-[#141C16] text-zinc-300 border border-[#222E25]">🎯 Quant Execution</span>
+              <span class="px-3.5 py-2 rounded-lg bg-[#141C16] text-zinc-400 border border-[#222E25]">📍 Gurugram, India</span>
             </div>
           </div>
 
@@ -299,7 +276,7 @@
 
     </section>
 
-    <!-- What We Do / Current Initiatives -->
+<!-- What We Do / Current Initiatives -->
     <section id="initiatives" class="space-y-6 sm:space-y-8">
       <div>
         <span class="text-xs font-mono font-semibold text-oat-500 uppercase tracking-wider">What We Do</span>
@@ -379,7 +356,7 @@
                 src="assets/sumit-yadav.JPG" 
                 alt="Sumit Yadav" 
                 class="w-full h-full object-cover block"
-                onerror="if (this.src.indexOf('.JPG') !== -1) { this.src='assets/sumit-yadav.jpg'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
               />
               <div class="w-full h-full hidden items-center justify-center font-display font-bold text-base bg-pastel-sageSoft text-pastel-sage">
                 SY
@@ -406,14 +383,7 @@
           <!-- Co-Founder: Nripendra Kumar Gangwar -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
             <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
-              <!-- Image with fallback -->
-              <img 
-                src="assets/nripendra-gangwar.jpg" 
-                alt="Nripendra Kumar Gangwar" 
-                class="w-full h-full object-cover block"
-                onerror="if (this.src.indexOf('.jpg') !== -1) { this.src='assets/nripendra-gangwar.JPG'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }"
-              />
-              <div class="w-full h-full hidden items-center justify-center font-display font-bold text-base bg-pastel-lavenderSoft text-pastel-lavender">
+              <div class="w-full h-full flex items-center justify-center font-display font-bold text-base sm:text-lg bg-pastel-lavenderSoft text-pastel-lavender">
                 NG
               </div>
             </div>
@@ -443,13 +413,7 @@
           <!-- Ayush Khare -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
             <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
-              <img 
-                src="assets/ayush-khare.jpg" 
-                alt="Ayush Khare" 
-                class="w-full h-full object-cover block"
-                onerror="if (this.src.indexOf('.jpg') !== -1) { this.src='assets/ayush-khare.JPG'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }"
-              />
-              <div class="w-full h-full hidden items-center justify-center font-display font-bold text-base bg-pastel-iceSoft text-pastel-ice">
+              <div class="w-full h-full flex items-center justify-center font-display font-bold text-base sm:text-lg bg-pastel-iceSoft text-pastel-ice">
                 AK
               </div>
             </div>
@@ -467,13 +431,7 @@
           <!-- Diksha Shinde -->
           <div class="card p-4 sm:p-5 rounded-2xl flex flex-row items-center gap-3.5 sm:gap-4">
             <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-oat-150 border border-oat-200 flex-shrink-0 flex items-center justify-center">
-              <img 
-                src="assets/diksha-shinde.jpg" 
-                alt="Diksha Shinde" 
-                class="w-full h-full object-cover block"
-                onerror="if (this.src.indexOf('.jpg') !== -1) { this.src='assets/diksha-shinde.JPG'; } else { this.style.display='none'; this.nextElementSibling.style.display='flex'; }"
-              />
-              <div class="w-full h-full hidden items-center justify-center font-display font-bold text-base bg-pastel-claySoft text-pastel-clay">
+              <div class="w-full h-full flex items-center justify-center font-display font-bold text-base sm:text-lg bg-pastel-claySoft text-pastel-clay">
                 DS
               </div>
             </div>
@@ -546,21 +504,13 @@
 
   </main>
 
-  <!-- Minimal Footer -->
+    <!-- Minimal Footer -->
   <footer class="border-t border-oat-200 py-6 sm:py-8 px-4 sm:px-6 bg-oat-50 text-xs font-mono text-oat-600 relative z-10">
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 text-left">
-      <div class="flex items-center gap-2.5">
-        <img 
-          src="assets/favicon.svg" 
-          alt="Nirmit AI Logo" 
-          class="w-5 h-5 rounded-md flex-shrink-0 opacity-90" 
-        />
-        <div class="flex items-baseline gap-1.5">
-          <span class="font-display font-bold text-oat-950">Nirmit AI</span>
-          <span class="text-[11px] text-oat-500 font-sans font-medium">निर्मित एआई</span>
-        </div>
-        <span>·</span>
-        <span>nirmitai.com</span>
+      <div class="flex items-center gap-2">
+        <span class="font-display font-bold text-oat-950 text-sm">Nirmit AI</span>
+        <span class="text-oat-400">·</span>
+        <a href="https://nirmitai.com" class="text-oat-600 hover:text-oat-950 hover:underline transition-colors">nirmitai.com</a>
       </div>
       <div class="text-[10px] text-oat-500 tracking-wider uppercase font-semibold">
         ESTABLISHED 2025 · GURUGRAM, INDIA
@@ -574,328 +524,99 @@
   <!-- Terminal Interactive CLI Engine -->
   <script>
     (function () {
-      let currentLang = 'en';
-      let currentInitiative = 0;
-      let typingTimer = null;
-      let logTimers = [];
-      let autoAdvanceTimer = null;
+      const rowBrand = document.getElementById('row-brand');
+      const rowHeadline = document.getElementById('row-headline');
+      const rowCli = document.getElementById('row-cli');
+      const rowBadges = document.getElementById('row-badges');
 
-      const langData = {
-        en: {
-          title: 'Purposeful AI, Robotics &amp; Everyday Automation <span class="text-emerald-400 font-normal">v2.5</span>',
-          missionLabel: 'Mission:',
-          missionVal: 'preparing for future',
-          statusLabel: 'Status:',
-          statusVal: 'Kinematics 60Hz · Spatial Vision OK · Microsecond Quant',
-          initiativesLabel: 'Core Initiatives:',
-          options: [
-            'Autonomous AI Trading Agent (Algorithmic Precision)',
-            'Physical Robot for Personal Assistance (Spatial Perception & Kinematics)',
-            'Web Applications & Websites (High-Performance Modern Platforms)',
-            'AI for Non-Tech Individuals (Accessible Everyday Automation)'
-          ],
-          telemetry: [
-            {
-              cmd: 'run quant.py --mode=live --target=NSE:AUTO --hedge=neutral',
-              logs: [
-                { tag: '[INIT]', color: 'text-emerald-400', msg: 'Quantitative execution engine online (latency: 38μs)' },
-                { tag: '[FEED]', color: 'text-cyan-400', msg: 'Orderbook L2 depth synchronized (5,200 ticks/sec)' },
-                { tag: '[ALPHA]', color: 'text-amber-300', msg: 'Signal confidence: 96.4% · risk envelope within bounds' },
-                { tag: '[STATUS]', color: 'text-emerald-400', msg: 'Autonomous execution active · zero unhedged exposure' }
-              ]
-            },
-            {
-              cmd: 'run bot.py --task="preparing for future" --telemetry=realtime',
-              logs: [
-                { tag: '[INIT]', color: 'text-emerald-400', msg: 'Biomimetic quadruped actuators online: 12-DOF calibrated' },
-                { tag: '[VISION]', color: 'text-cyan-400', msg: 'Spatial depth sensor locked: 360° LiDAR cloud valid' },
-                { tag: '[KINETIC]', color: 'text-amber-300', msg: 'Gait stabilized at 60Hz · dynamic posture balance OK' },
-                { tag: '[STATUS]', color: 'text-emerald-400', msg: 'Personal assistance companion ready · preparing for future' }
-              ]
-            },
-            {
-              cmd: 'deploy web.ts --edge=distributed --perf=100-lighthouse',
-              logs: [
-                { tag: '[BUILD]', color: 'text-emerald-400', msg: 'Edge workers compiled: SSR zero-cold-start' },
-                { tag: '[OPT]', color: 'text-cyan-400', msg: 'Assets compressed: Brotli ultra-compact bundle 24KB' },
-                { tag: '[CDN]', color: 'text-amber-300', msg: 'Global edge PoPs active (Mumbai, Singapore, Frankfurt)' },
-                { tag: '[STATUS]', color: 'text-emerald-400', msg: 'Production live globally · TTFB < 20ms' }
-              ]
-            },
-            {
-              cmd: 'launch assistant.py --mode=everyday --target=practical-ai',
-              logs: [
-                { tag: '[NATURAL]', color: 'text-emerald-400', msg: 'Natural language agent initialized (EN + हिन्दी)' },
-                { tag: '[FLOW]', color: 'text-cyan-400', msg: 'Daily task automation active: saving 4+ hours/day' },
-                { tag: '[ACCORD]', color: 'text-amber-300', msg: 'Demystified AI guidance loaded · zero coding required' },
-                { tag: '[STATUS]', color: 'text-emerald-400', msg: 'Accessible AI ready for individuals & businesses' }
-              ]
-            }
-          ]
+      function revealRow(el) {
+        if (!el) return;
+        el.classList.add('is-open');
+        const h = el.scrollHeight;
+        el.style.maxHeight = (h + 10) + 'px';
+        setTimeout(() => {
+          el.classList.add('is-settled');
+          el.style.maxHeight = '';
+        }, 700);
+      }
+
+      // Snappy and smooth row-by-row reveal sequence:
+      // Initially, only the terminal tab titlebar is visible. Nirmit AI brick is completely hidden.
+      // Step 1: Row 1 (Nirmit AI brick) unveils smoothly
+      setTimeout(() => {
+        revealRow(rowBrand);
+      }, 200);
+
+      // Step 2: Row 2 (Headline & Subtitle) unveils smoothly
+      setTimeout(() => {
+        revealRow(rowHeadline);
+      }, 600);
+
+      // Step 3: Row 3 (Interactive CLI Command Bar) unveils smoothly
+      setTimeout(() => {
+        revealRow(rowCli);
+      }, 1000);
+
+      // Step 4: Row 4 (Capability & Action Badges) unveils smoothly
+      setTimeout(() => {
+        revealRow(rowBadges);
+      }, 1400);
+
+      const commands = [
+        {
+          cmd: 'run bot.py --task="preparing for future" --kinematics=60hz',
+          response: '<span class="text-emerald-400 font-semibold">[OK]</span> Biomimetic quadruped actuators online · 12-DOF calibrated · Gait stabilized at 60Hz'
         },
-        hi: {
-          title: 'सार्थक एआई, रोबोटिक्स एवं दैनिक स्वचालन <span class="text-emerald-400 font-normal">v2.5</span>',
-          missionLabel: 'लक्ष्य:',
-          missionVal: 'भविष्य की तैयारी (preparing for future)',
-          statusLabel: 'स्थिति:',
-          statusVal: 'काइनेमैटिक्स 60Hz · स्थानिक दृष्टि OK · सूक्ष्म सेकंड क्वांट',
-          initiativesLabel: 'प्रमुख पहल:',
-          options: [
-            'स्वायत्त एआई ट्रेडिंग एजेंट (Autonomous AI Trading Agent)',
-            'दैनिक सहायता हेतु भौतिक रोबोट (Physical Robot for Personal Assistance)',
-            'वेब ऐप्लिकेशन्स एवं वेबसाइट्स (Modern Web Applications)',
-            'गैर-तकनीकी व्यक्तियों के लिए एआई (AI for Non-Tech Individuals)'
-          ],
-          telemetry: [
-            {
-              cmd: 'run quant.py --mode=स्वायत्त --target=NSE:AUTO --जोखिम=न्यूनतम',
-              logs: [
-                { tag: '[शुरुआत]', color: 'text-emerald-400', msg: 'क्वांटिटेटिव ट्रेडिंग इंजन सक्रिय (विलंबता: 38μs)' },
-                { tag: '[डेटा]', color: 'text-cyan-400', msg: 'मार्केट L2 ऑर्डरबुक सिंक्रनाइज़ (5,200 टिक/सेकंड)' },
-                { tag: '[संकेत]', color: 'text-amber-300', msg: 'अल्फा आत्मविश्वास: 96.4% · संतुलित हेजिंग' },
-                { tag: '[स्थिति]', color: 'text-emerald-400', msg: 'स्वायत्त ट्रेडिंग रणनीति सुचारू रूप से सक्रिय' }
-              ]
-            },
-            {
-              cmd: 'run bot.py --कार्य="भविष्य की तैयारी" --काइनेमैटिक्स=60hz',
-              logs: [
-                { tag: '[शुरुआत]', color: 'text-emerald-400', msg: 'बायोमिमेटिक मोटर एक्चुएटर्स तैयार: 12-DOF कैलिब्रेटेड' },
-                { tag: '[दृष्टि]', color: 'text-cyan-400', msg: '360° LiDAR स्थानिक गहराई मैपिंग सत्यापित' },
-                { tag: '[गति]', color: 'text-amber-300', msg: 'चौपाया चाल स्थिर (आवृत्ति 60Hz · अनुकूली संतुलन)' },
-                { tag: '[स्थिति]', color: 'text-emerald-400', msg: 'व्यक्तिगत सहायता रोबोट सक्रिय · भविष्य के लिए तैयार' }
-              ]
-            },
-            {
-              cmd: 'deploy webapp.ts --क्लाउड=ग्लोबल --परफॉर्मेंस=सर्वोत्तम',
-              logs: [
-                { tag: '[बिल्ड]', color: 'text-emerald-400', msg: 'अल्ट्रा-फास्ट एज वर्कर्स कंपाइल (शून्य कोल्ड स्टार्ट)' },
-                { tag: '[अनुकूलन]', color: 'text-cyan-400', msg: 'संपत्तियां अनुकूलित: अत्यधिक तेज़ लोडिंग' },
-                { tag: '[सीडीएन]', color: 'text-amber-300', msg: 'वैश्विक नोड्स सक्रिय (मुंबई, सिंगापुर, फ्रैंकफर्ट)' },
-                { tag: '[स्थिति]', color: 'text-emerald-400', msg: 'आधुनिक वेब ऐप्लिकेशन लाइव · 100/100 स्कोर' }
-              ]
-            },
-            {
-              cmd: 'launch assistant.py --उपयोगकर्ता="दैनिक-स्वचालन" --भाषा=द्विभाषी',
-              logs: [
-                { tag: '[भाषा]', color: 'text-emerald-400', msg: 'सहज वार्तालाप इंटरफेस सक्रिय (अंग्रेजी + हिन्दी)' },
-                { tag: '[स्वचालन]', color: 'text-cyan-400', msg: 'दैनिक कार्य स्वचालन पाइपलाइन जुड़ी: 4+ घंटे/दिन की बचत' },
-                { tag: '[पहुंच]', color: 'text-amber-300', msg: 'बिना कोडिंग के आम लोगों के लिए आसान एआई' },
-                { tag: '[स्थिति]', color: 'text-emerald-400', msg: 'व्यक्तिगत एवं व्यावसायिक उपयोग हेतु तैयार' }
-              ]
-            }
-          ]
+        {
+          cmd: 'run quant.py --mode=live --target=NSE:AUTO --hedge=neutral',
+          response: '<span class="text-emerald-400 font-semibold">[OK]</span> Quant execution active · Alpha confidence: 96.4% · Latency: 38μs'
+        },
+        {
+          cmd: 'deploy web.ts --edge=distributed --perf=100-lighthouse',
+          response: '<span class="text-emerald-400 font-semibold">[OK]</span> Edge deployment active (Mumbai, Singapore, Frankfurt) · TTFB &lt; 20ms'
+        },
+        {
+          cmd: 'launch assistant.py --mode=everyday --target=practical-ai',
+          response: '<span class="text-emerald-400 font-semibold">[OK]</span> Daily automation pipeline linked · Demystified practical AI'
         }
-      };
+      ];
 
-      function clearAllTimers() {
-        if (typingTimer) clearTimeout(typingTimer);
-        logTimers.forEach(t => clearTimeout(t));
-        logTimers = [];
-        if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-      }
+      let cmdIndex = 0;
+      let charIndex = 0;
+      let typingTimer = null;
+      let cycleTimer = null;
 
-      function getTimestamp(offsetMs) {
-        const d = new Date(Date.now() + offsetMs);
-        const hh = String(d.getHours()).padStart(2, '0');
-        const mm = String(d.getMinutes()).padStart(2, '0');
-        const ss = String(d.getSeconds()).padStart(2, '0');
-        const mmm = String(d.getMilliseconds()).padStart(3, '0');
-        return `${hh}:${mm}:${ss}.${mmm}`;
-      }
+      const cmdEl = document.getElementById('cli-command');
+      const outEl = document.getElementById('cli-output');
 
-      function renderTypewriter(initiativeIndex) {
-        clearAllTimers();
-        const cmdEl = document.getElementById('cli-command');
-        const outEl = document.getElementById('cli-output');
+      function typeCommand() {
         if (!cmdEl || !outEl) return;
-
-        cmdEl.textContent = '';
+        const current = commands[cmdIndex];
         outEl.innerHTML = '';
 
-        const data = langData[currentLang].telemetry[initiativeIndex];
-        const targetCmd = data.cmd;
-        let charIndex = 0;
-
-        function typeNextChar() {
-          if (charIndex < targetCmd.length) {
-            cmdEl.textContent += targetCmd.charAt(charIndex);
-            charIndex++;
-            typingTimer = setTimeout(typeNextChar, 24);
-          } else {
-            typingTimer = setTimeout(() => {
-              renderLogs(data.logs);
-            }, 160);
-          }
+        if (charIndex < current.cmd.length) {
+          cmdEl.textContent += current.cmd.charAt(charIndex);
+          charIndex++;
+          typingTimer = setTimeout(typeCommand, 30);
+        } else {
+          typingTimer = setTimeout(() => {
+            outEl.innerHTML = current.response;
+            cycleTimer = setTimeout(() => {
+              charIndex = 0;
+              cmdEl.textContent = '';
+              cmdIndex = (cmdIndex + 1) % commands.length;
+              typeCommand();
+            }, 4500);
+          }, 260);
         }
-
-        typeNextChar();
       }
 
-      function renderLogs(logs) {
-        const outEl = document.getElementById('cli-output');
-        if (!outEl) return;
-
-        logs.forEach((item, i) => {
-          const timer = setTimeout(() => {
-            const line = document.createElement('div');
-            line.className = 'flex items-baseline gap-2 opacity-0 transition-opacity duration-200';
-            const ts = getTimestamp(i * 180);
-            line.innerHTML = `
-              <span class="text-zinc-500 font-mono text-[10px] select-none">[${ts}]</span>
-              <span class="${item.color} font-semibold select-none">${item.tag}</span>
-              <span class="text-zinc-300 font-mono">${item.msg}</span>
-            `;
-            outEl.appendChild(line);
-            requestAnimationFrame(() => {
-              line.classList.remove('opacity-0');
-            });
-
-            if (i === logs.length - 1) {
-              autoAdvanceTimer = setTimeout(() => {
-                const nextIdx = (currentInitiative + 1) % 4;
-                window.selectInitiative(nextIdx, false);
-              }, 7500);
-            }
-          }, (i + 1) * 220);
-
-          logTimers.push(timer);
-        });
-      }
-
-      window.selectInitiative = function (idx, fromUser) {
-        currentInitiative = idx;
-        const optionsList = document.getElementById('cli-options-list');
-        if (optionsList) {
-          const items = optionsList.querySelectorAll('.cli-opt');
-          items.forEach((item, i) => {
-            const pointer = item.querySelector('.cli-pointer');
-            if (i === idx) {
-              item.classList.remove('text-zinc-400');
-              item.classList.add('text-emerald-300', 'font-semibold');
-              if (pointer) {
-                pointer.classList.remove('opacity-0');
-                pointer.classList.add('opacity-100', 'text-emerald-400');
-              }
-            } else {
-              item.classList.remove('text-emerald-300', 'font-semibold');
-              item.classList.add('text-zinc-400');
-              if (pointer) {
-                pointer.classList.remove('opacity-100');
-                pointer.classList.add('opacity-0');
-              }
-            }
-          });
-        }
-
-        renderTypewriter(idx);
-      };
-
-      window.setTerminalLang = function (lang) {
-        currentLang = lang;
-        const btnEn = document.getElementById('lang-btn-en');
-        const btnHi = document.getElementById('lang-btn-hi');
-        const brickEn = document.getElementById('terminal-brick-en');
-        const brickHi = document.getElementById('terminal-brick-hi');
-
-        if (lang === 'en') {
-          if (btnEn) btnEn.className = 'px-2 py-0.5 rounded transition-colors bg-[#1E2921] text-emerald-400 font-semibold border border-emerald-500/30';
-          if (btnHi) btnHi.className = 'px-2 py-0.5 rounded transition-colors text-zinc-400 hover:text-zinc-200 border border-transparent';
-          if (brickEn) { brickEn.classList.remove('hidden'); brickEn.classList.add('block'); }
-          if (brickHi) { brickHi.classList.remove('block'); brickHi.classList.add('hidden'); }
-        } else {
-          if (btnHi) btnHi.className = 'px-2 py-0.5 rounded transition-colors bg-[#1E2921] text-emerald-400 font-semibold border border-emerald-500/30';
-          if (btnEn) btnEn.className = 'px-2 py-0.5 rounded transition-colors text-zinc-400 hover:text-zinc-200 border border-transparent';
-          if (brickHi) { brickHi.classList.remove('hidden'); brickHi.classList.add('block'); }
-          if (brickEn) { brickEn.classList.remove('block'); brickEn.classList.add('hidden'); }
-        }
-
-        const curData = langData[lang];
-        const titleEl = document.getElementById('hero-title-text');
-        if (titleEl) titleEl.innerHTML = curData.title;
-
-        const missionLbl = document.getElementById('cli-mission-label');
-        if (missionLbl) missionLbl.textContent = curData.missionLabel;
-
-        const missionVal = document.getElementById('cli-mission-val');
-        if (missionVal) missionVal.textContent = curData.missionVal;
-
-        const statusLbl = document.getElementById('cli-status-label');
-        if (statusLbl) statusLbl.textContent = curData.statusLabel;
-
-        const statusVal = document.getElementById('cli-status-val');
-        if (statusVal) statusVal.textContent = curData.statusVal;
-
-        const initLbl = document.getElementById('cli-initiatives-label');
-        if (initLbl) initLbl.textContent = curData.initiativesLabel;
-
-        for (let i = 0; i < 4; i++) {
-          const optEl = document.getElementById(`cli-opt-text-${i}`);
-          if (optEl) optEl.textContent = curData.options[i];
-        }
-
-        renderTypewriter(currentInitiative);
-      };
-
-      // Keyboard navigation
-      window.addEventListener('keydown', function (e) {
-        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
-
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          const next = (currentInitiative + 1) % 4;
-          window.selectInitiative(next, true);
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          const prev = (currentInitiative - 1 + 4) % 4;
-          window.selectInitiative(prev, true);
-        } else if (e.key === 'Enter') {
-          e.preventDefault();
-          const initiativesSec = document.getElementById('initiatives');
-          if (initiativesSec) initiativesSec.scrollIntoView({ behavior: 'smooth' });
-        } else if (e.key === 'Tab') {
-          e.preventDefault();
-          window.setTerminalLang(currentLang === 'en' ? 'hi' : 'en');
-        }
-      });
-
-      let isExpanded = false;
-
-      window.toggleTerminalExpand = function (forceState) {
-        const terminal = document.getElementById('hero-terminal');
-        const expandIcon = document.getElementById('terminal-expand-icon');
-        const expandLabel = document.getElementById('terminal-expand-label');
-        if (!terminal) return;
-
-        if (typeof forceState === 'boolean') {
-          isExpanded = forceState;
-        } else {
-          isExpanded = !isExpanded;
-        }
-
-        if (isExpanded) {
-          terminal.classList.remove('terminal-booting', 'terminal-compact');
-          terminal.classList.add('terminal-expanded');
-          if (expandIcon) expandIcon.textContent = '⤡';
-          if (expandLabel) expandLabel.textContent = 'Compact';
-        } else {
-          terminal.classList.remove('terminal-booting', 'terminal-expanded');
-          terminal.classList.add('terminal-compact');
-          if (expandIcon) expandIcon.textContent = '⤢';
-          if (expandLabel) expandLabel.textContent = 'Expand';
-        }
-      };
-
-      // Expanding animation sequence on boot
-      setTimeout(() => {
-        window.toggleTerminalExpand(true);
-        setTimeout(() => {
-          window.selectInitiative(0, false);
-        }, 350);
-      }, 250);
+      // Terminal stops expanding at end and starts the current CLI typewriter animation
+      setTimeout(typeCommand, 1950);
     })();
   </script>
 
-  <!-- Neural Network & Biomimetic Animaloid Companion Robot Animation Engine -->
+<!-- Neural Network & Biomimetic Animaloid Companion Robot Animation Engine -->
   <script>
     (function () {
       const canvas = document.getElementById('neural-canvas');
@@ -928,14 +649,14 @@
         nodes = [];
         pulses = [];
         const isMobile = width < 768;
-        const count = isMobile ? 18 : 34;
+        const count = isMobile ? 18 : 32;
 
-        // Concentrate nodes on the RIGHT side of the screen
+        // Distribute nodes across the screen for full canvas ambient networking
         for (let i = 0; i < count; i++) {
-          const minX = isMobile ? width * 0.40 : width * 0.52;
-          const maxX = width * 0.96;
+          const minX = isMobile ? width * 0.05 : width * 0.08;
+          const maxX = width * 0.95;
           const x = minX + Math.random() * (maxX - minX);
-          const y = 30 + Math.random() * Math.min(height * 0.85, 580);
+          const y = 30 + Math.random() * Math.min(height * 0.88, 620);
 
           nodes.push({
             x,
@@ -973,253 +694,562 @@
 
       setInterval(spawnPulse, 1600);
 
-      // Biomimetic Animaloid Companion Robot Drawing (Personal Assistance Bot)
+      // =========================================================================
+      // Spot / SpotMicro Quadruped Robot (Dense 3D Wireframe CAD Architecture)
+      // Analytical 2-Link Inverse Kinematics (IK), Identical Symmetrical Limbs,
+      // and High-Precision Circular Actuator Geometry
+      // =========================================================================
       function drawAnimaloidBot(cx, cy, s, alpha, time) {
         if (alpha <= 0.02) return null;
 
-        // Natural kinematic breathing and weight cycles
-        const breath = Math.sin(time * 0.0018);
-        const cycle = time * 0.0022;
-        const bodyBob = 2.4 * breath;
-        const groundY = cy + 58 * s;
+        const TWO_PI = Math.PI * 2;
+        // Trot stride cadence tied to horizontal travel: zero foot-slip
+        const strideDist = 58 * s;
+        const phase = ((cx / strideDist) % TWO_PI + TWO_PI) % TWO_PI;
 
-        // Architectural contrast colors
-        const cPlate = `rgba(255, 255, 255, ${(0.96 * alpha).toFixed(3)})`;
-        const cStroke = `rgba(20, 17, 14, ${(0.85 * alpha).toFixed(3)})`;
-        const cHairline = `rgba(95, 87, 77, ${(0.55 * alpha).toFixed(3)})`;
-        const cIce = `rgba(26, 93, 117, ${(0.88 * alpha).toFixed(3)})`;
-        const cSage = `rgba(30, 102, 38, ${(0.88 * alpha).toFixed(3)})`;
-        const cClay = `rgba(153, 59, 30, ${(0.88 * alpha).toFixed(3)})`;
-        const cJoint = `rgba(250, 248, 245, ${(0.96 * alpha).toFixed(3)})`;
+        // Diagonal trot gait pairings (Authentic quadruped locomotion):
+        // Pair A: Front-Near (left) & Hind-Far (right)
+        const phiA = phase;
+        // Pair B: Front-Far (right) & Hind-Near (left) (half-cycle out of phase)
+        const phiB = (phase + Math.PI) % TWO_PI;
 
-        // Ambient ground shadow under paws
-        ctx.beginPath();
-        ctx.ellipse(cx + 4 * s, groundY + 2 * s, 64 * s, 8 * s, 0, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(95, 87, 77, ${(0.14 * alpha).toFixed(3)})`;
-        ctx.fill();
+        // Symmetrical dynamic chassis oscillations (Spot trot kinematics)
+        const bodyBounce = Math.cos(phase * 2) * (3.5 * s);
+        const bodyPitch = Math.sin(phase) * 0.032; // radians
+        const cosP = Math.cos(bodyPitch);
+        const sinP = Math.sin(bodyPitch);
 
-        // Key anatomical body nodes
-        const hipX = cx - 36 * s;
-        const hipY = cy - 2 * s + bodyBob;
-        const shoulderX = cx + 38 * s;
-        const shoulderY = cy - 6 * s + bodyBob;
-        const midSpineX = cx + 2 * s;
-        const midSpineY = cy - 8 * s + bodyBob * 0.8;
+        const baseX = cx;
+        const baseY = cy + bodyBounce;
 
-        // Quadruped limb rendering function
-        function drawLeg(baseX, baseY, isFrontLeg, isFar, phase) {
-          const strokeCol = isFar ? `rgba(140, 125, 111, ${(0.5 * alpha).toFixed(3)})` : cStroke;
-          const accentCol = isFar ? `rgba(140, 125, 111, ${(0.35 * alpha).toFixed(3)})` : (isFrontLeg ? cIce : cClay);
-          const jointFill = isFar ? `rgba(235, 228, 220, ${(0.8 * alpha).toFixed(3)})` : cJoint;
-
-          let kneeX, kneeY, ankleX, ankleY, pawX, pawY;
-
-          if (isFrontLeg) {
-            // Front leg: shoulder -> elbow (backward) -> wrist (forward) -> paw
-            kneeX = baseX - 12 * s + 3 * Math.sin(cycle + phase);
-            kneeY = baseY + 26 * s + 1.2 * breath;
-            ankleX = baseX + 4 * s + 2 * Math.sin(cycle + phase);
-            ankleY = baseY + 46 * s;
-            pawX = baseX + 8 * s;
-            pawY = groundY;
-          } else {
-            // Hind leg: hip -> knee (forward) -> hock (backward) -> paw
-            kneeX = baseX + 14 * s + 3 * Math.sin(cycle + phase);
-            kneeY = baseY + 24 * s + 1.2 * breath;
-            ankleX = baseX - 10 * s + 2 * Math.sin(cycle + phase);
-            ankleY = baseY + 44 * s;
-            pawX = baseX - 4 * s;
-            pawY = groundY;
-          }
-
-          // Upper limb
-          ctx.strokeStyle = strokeCol;
-          ctx.lineWidth = (isFar ? 1.0 : 1.4) * s;
-          ctx.beginPath();
-          ctx.moveTo(baseX, baseY);
-          ctx.lineTo(kneeX, kneeY);
-          ctx.stroke();
-
-          // Actuator cylinder linkage
-          ctx.strokeStyle = accentCol;
-          ctx.lineWidth = 0.8 * s;
-          const dx1 = kneeX - baseX, dy1 = kneeY - baseY;
-          const len1 = Math.sqrt(dx1 * dx1 + dy1 * dy1) || 1;
-          const nx1 = (-dy1 / len1) * 3 * s;
-          const ny1 = (dx1 / len1) * 3 * s;
-          ctx.beginPath();
-          ctx.moveTo(baseX + nx1, baseY + ny1);
-          ctx.lineTo(kneeX + nx1, kneeY + ny1);
-          ctx.stroke();
-
-          // Lower limb
-          ctx.strokeStyle = strokeCol;
-          ctx.lineWidth = (isFar ? 0.9 : 1.3) * s;
-          ctx.beginPath();
-          ctx.moveTo(kneeX, kneeY);
-          ctx.lineTo(ankleX, ankleY);
-          ctx.stroke();
-
-          // Hydraulic strut
-          ctx.strokeStyle = cHairline;
-          ctx.lineWidth = 0.7 * s;
-          ctx.beginPath();
-          ctx.moveTo(kneeX - nx1, kneeY - ny1);
-          ctx.lineTo(ankleX, ankleY);
-          ctx.stroke();
-
-          // Ankle to Paw
-          ctx.strokeStyle = strokeCol;
-          ctx.lineWidth = (isFar ? 0.8 : 1.1) * s;
-          ctx.beginPath();
-          ctx.moveTo(ankleX, ankleY);
-          ctx.lineTo(pawX, pawY);
-          ctx.stroke();
-
-          // Paw Pad
-          ctx.fillStyle = strokeCol;
-          ctx.beginPath();
-          ctx.ellipse(pawX, pawY, 3.8 * s, 1.8 * s, 0, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Joint Pivot Bearings
-          [ [baseX, baseY, 3.2 * s], [kneeX, kneeY, 2.8 * s], [ankleX, ankleY, 2.2 * s] ].forEach(([jx, jy, jr]) => {
-            ctx.beginPath();
-            ctx.arc(jx, jy, jr, 0, Math.PI * 2);
-            ctx.fillStyle = jointFill;
-            ctx.fill();
-            ctx.strokeStyle = strokeCol;
-            ctx.lineWidth = 0.9 * s;
-            ctx.stroke();
-          });
+        // 3D perspective projection helper (3/4 isometric perspective)
+        function project(rx, ry, rz) {
+          const rxRot = rx * cosP - ry * sinP;
+          const ryRot = rx * sinP + ry * cosP;
+          const px = baseX + rxRot + rz * 0.22;
+          const py = baseY + ryRot - rz * 0.11;
+          return { x: px, y: py };
         }
 
-        // Draw Background (Far) Limbs
-        drawLeg(hipX - 5 * s, hipY - 2 * s, false, true, Math.PI);
-        drawLeg(shoulderX - 4 * s, shoulderY - 2 * s, true, true, 0);
+        // Spot / SpotMicro reference link lengths: IDENTICAL across all four limbs
+        const L1 = 38 * s; // Upper leg (femur/humerus)
+        const L2 = 44 * s; // Lower leg (tibia/shin)
+        const groundY = cy + 42 * s; // Absolute ground contact baseline
 
-        // Biomimetic Tail
-        ctx.strokeStyle = cStroke;
-        ctx.lineWidth = 1.3 * s;
-        const tailWave1 = 4 * Math.sin(time * 0.0019);
-        const tailWave2 = 8 * Math.sin(time * 0.0019 + 0.6);
-        const tailBaseX = hipX - 12 * s;
-        const tailBaseY = hipY - 2 * s;
-        const tailMidX = tailBaseX - 22 * s;
-        const tailMidY = tailBaseY - 14 * s + tailWave1;
-        const tailTipX = tailMidX - 24 * s;
-        const tailTipY = tailMidY - 16 * s + tailWave2;
+        // Analytical 2-link Inverse Kinematics solver (Spot backward-flexing knee configuration)
+        function solveIK(mountX, mountY, targetX, targetY) {
+          const dx = targetX - mountX;
+          const dy = targetY - mountY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const d = Math.max(10 * s, Math.min(dist, (L1 + L2) * 0.98));
+          const cosAngle = (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d);
+          const clampedCos = Math.max(-1, Math.min(1, cosAngle));
+          const angleOffset = Math.acos(clampedCos);
+          const baseAngle = Math.atan2(dy, dx);
+          // Spot knee flexes backward
+          const hipAngle = baseAngle + angleOffset;
+          const kneeX = mountX + Math.cos(hipAngle) * L1;
+          const kneeY = mountY + Math.sin(hipAngle) * L1;
+          return { kneeX, kneeY };
+        }
 
+        // Stride kinematics generator for paw trajectories
+        function computePaw(stridePhase, defaultMountX) {
+          let pawRelX = 0;
+          let pawRelY = groundY;
+          let inContact = false;
+
+          if (stridePhase < Math.PI) {
+            // Stance phase: paw planted on ground moving backward at ground speed
+            const u = stridePhase / Math.PI; // 0 to 1
+            pawRelX = defaultMountX + strideDist * (0.5 - u);
+            pawRelY = groundY;
+            inContact = true;
+          } else {
+            // Swing phase: paw lifted forward in a smooth cycloid arc
+            const u = (stridePhase - Math.PI) / Math.PI; // 0 to 1
+            pawRelX = defaultMountX + strideDist * (-0.5 + u);
+            const lift = Math.sin(u * Math.PI) * (21 * s);
+            pawRelY = groundY - lift;
+            inContact = false;
+          }
+          return { x: pawRelX, y: pawRelY, inContact };
+        }
+
+        // Symmetrical mount pivots (SpotMicro URDF standard: front & rear offset = 35 * s)
+        const frontMountX = 35 * s;
+        const rearMountX = -35 * s;
+        const mountY = -2 * s;
+        const zNear = 14 * s;
+        const zFar = -14 * s;
+
+        // Mount 3D coordinates
+        const pMountFrontNear = project(frontMountX, mountY, zNear);
+        const pMountFrontFar  = project(frontMountX, mountY, zFar);
+        const pMountRearNear  = project(rearMountX, mountY, zNear);
+        const pMountRearFar   = project(rearMountX, mountY, zFar);
+
+        // Compute paw trajectories
+        const pawFN = computePaw(phiA, baseX + frontMountX + zNear * 0.22);
+        const pawFF = computePaw(phiB, baseX + frontMountX + zFar * 0.22);
+        const pawRN = computePaw(phiB, baseX + rearMountX + zNear * 0.22);
+        const pawRF = computePaw(phiA, baseX + rearMountX + zFar * 0.22);
+
+        // Subtle perspective elevation for far paws
+        pawFF.y -= 3.0 * s;
+        pawRF.y -= 3.0 * s;
+
+        // Solve Inverse Kinematics for all 4 legs (identical mathematical solution)
+        const ikFN = solveIK(pMountFrontNear.x, pMountFrontNear.y, pawFN.x, pawFN.y);
+        const ikFF = solveIK(pMountFrontFar.x, pMountFrontFar.y, pawFF.x, pawFF.y);
+        const ikRN = solveIK(pMountRearNear.x, pMountRearNear.y, pawRN.x, pawRN.y);
+        const ikRF = solveIK(pMountRearFar.x, pMountRearFar.y, pawRF.x, pawRF.y);
+
+        // High-tech blueprint CAD palette
+        const colNearLine    = `rgba(56, 189, 248, ${(alpha * 0.95).toFixed(3)})`;   // Bright Cyan
+        const colNearAccent  = `rgba(20, 184, 166, ${(alpha * 0.90).toFixed(3)})`;   // Teal Accent
+        const colFarLine     = `rgba(30, 120, 150, ${(alpha * 0.48).toFixed(3)})`;   // Depth Dimmed
+        const colWireChassis = `rgba(34, 211, 238, ${(alpha * 0.70).toFixed(3)})`;   // CAD Chassis Cyan
+        const colInternal    = `rgba(16, 185, 129, ${(alpha * 0.65).toFixed(3)})`;   // Battery Cell Emerald
+
+        // Helper to draw a single modular robotic leg with prominent circular shapes
+        function drawModularLeg(bx, by, kx, ky, px, py, isNear, inContact) {
+          const legLine = isNear ? colNearLine : colFarLine;
+          const legAcc  = isNear ? colNearAccent : colFarLine;
+
+          ctx.save();
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(1.0, (isNear ? 1.6 : 1.1) * s);
+
+          // 1. CIRCULAR HIP / SHOULDER SERVO HUB (Prominent circular actuators)
+          // Outer circular casing
+          ctx.beginPath();
+          ctx.arc(bx, by, 9.2 * s, 0, TWO_PI);
+          ctx.stroke();
+
+          // Inner stator ring
+          ctx.beginPath();
+          ctx.arc(bx, by, 6.2 * s, 0, TWO_PI);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.8, 1.0 * s);
+          ctx.stroke();
+
+          // Central bearing axle
+          ctx.beginPath();
+          ctx.arc(bx, by, 2.6 * s, 0, TWO_PI);
+          ctx.stroke();
+
+          // Axle center pin
+          ctx.beginPath();
+          ctx.arc(bx, by, 1.2 * s, 0, TWO_PI);
+          ctx.fillStyle = isNear ? `rgba(56, 189, 248, ${alpha})` : legLine;
+          ctx.fill();
+
+          // 4 radial tick spokes on circular hub
+          ctx.beginPath();
+          for (let angle = 0; angle < TWO_PI; angle += Math.PI / 2) {
+            const rx1 = bx + Math.cos(angle) * 6.2 * s;
+            const ry1 = by + Math.sin(angle) * 6.2 * s;
+            const rx2 = bx + Math.cos(angle) * 9.2 * s;
+            const ry2 = by + Math.sin(angle) * 9.2 * s;
+            ctx.moveTo(rx1, ry1);
+            ctx.lineTo(rx2, ry2);
+          }
+          ctx.stroke();
+
+          // 2. UPPER LEG CAPSULE WITH CIRCULAR CUTOUTS
+          const th1 = Math.atan2(ky - by, kx - bx);
+          const nx1 = -Math.sin(th1);
+          const ny1 = Math.cos(th1);
+          const wBase = 7.5 * s;
+          const wKnee = 5.6 * s;
+
+          // Outer smooth stadium capsule profile
+          ctx.beginPath();
+          ctx.moveTo(bx + nx1 * wBase, by + ny1 * wBase);
+          ctx.lineTo(kx + nx1 * wKnee, ky + ny1 * wKnee);
+          ctx.arc(kx, ky, wKnee, th1 - Math.PI / 2, th1 + Math.PI / 2);
+          ctx.lineTo(bx - nx1 * wBase, by - ny1 * wBase);
+          ctx.arc(bx, by, wBase, th1 + Math.PI / 2, th1 - Math.PI / 2);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(1.0, (isNear ? 1.5 : 1.0) * s);
+          ctx.stroke();
+
+          // Centerline structural truss
+          ctx.beginPath();
+          ctx.moveTo(bx, by);
+          ctx.lineTo(kx, ky);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.6, 0.8 * s);
+          ctx.stroke();
+
+          // Circular weight-reduction cutouts (Circular geometry)
+          const cut1x = bx + (kx - bx) * 0.38;
+          const cut1y = by + (ky - by) * 0.38;
+          const cut2x = bx + (kx - bx) * 0.68;
+          const cut2y = by + (ky - by) * 0.68;
+
+          // Cutout 1: upper circular hole & inner concentric ring
+          ctx.beginPath();
+          ctx.arc(cut1x, cut1y, 3.5 * s, 0, TWO_PI);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(0.8, 1.1 * s);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cut1x, cut1y, 1.9 * s, 0, TWO_PI);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.6, 0.8 * s);
+          ctx.stroke();
+
+          // Cutout 2: lower circular hole & inner concentric ring
+          ctx.beginPath();
+          ctx.arc(cut2x, cut2y, 2.7 * s, 0, TWO_PI);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(0.8, 1.1 * s);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cut2x, cut2y, 1.5 * s, 0, TWO_PI);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.6, 0.8 * s);
+          ctx.stroke();
+
+          // 3. CIRCULAR KNEE JOINT ACTUATOR HUB
+          // Outer circular bearing
+          ctx.beginPath();
+          ctx.arc(kx, ky, 6.8 * s, 0, TWO_PI);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(1.0, (isNear ? 1.6 : 1.1) * s);
+          ctx.stroke();
+
+          // Inner precision rotor ring
+          ctx.beginPath();
+          ctx.arc(kx, ky, 4.3 * s, 0, TWO_PI);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.8, 1.0 * s);
+          ctx.stroke();
+
+          // Central knee pivot pin
+          ctx.beginPath();
+          ctx.arc(kx, ky, 1.8 * s, 0, TWO_PI);
+          ctx.fillStyle = isNear ? `rgba(56, 189, 248, ${alpha})` : legLine;
+          ctx.fill();
+
+          // 3 radial tick marks around knee hub
+          ctx.beginPath();
+          for (let kAngle = 0; kAngle < TWO_PI; kAngle += TWO_PI / 3) {
+            const rx1 = kx + Math.cos(kAngle) * 4.3 * s;
+            const ry1 = ky + Math.sin(kAngle) * 4.3 * s;
+            const rx2 = kx + Math.cos(kAngle) * 6.8 * s;
+            const ry2 = ky + Math.sin(kAngle) * 6.8 * s;
+            ctx.moveTo(rx1, ry1);
+            ctx.lineTo(rx2, ry2);
+          }
+          ctx.stroke();
+
+          // 4. LOWER LEG (Tibia/Shin) WITH CIRCULAR ANKLE JOINT
+          const th2 = Math.atan2(py - ky, px - kx);
+          const nx2 = -Math.sin(th2);
+          const ny2 = Math.cos(th2);
+          const wKnee2 = 4.6 * s;
+          const wAnkle = 2.4 * s;
+
+          // Dual structural carbon-fiber spars
+          ctx.beginPath();
+          ctx.moveTo(kx + nx2 * wKnee2, ky + ny2 * wKnee2);
+          ctx.lineTo(px + nx2 * wAnkle, py + ny2 * wAnkle);
+          ctx.moveTo(kx - nx2 * wKnee2, ky - ny2 * wKnee2);
+          ctx.lineTo(px - nx2 * wAnkle, py - ny2 * wAnkle);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(0.9, (isNear ? 1.3 : 0.9) * s);
+          ctx.stroke();
+
+          // Internal shock strut & cross-trusses
+          const midLX = kx + (px - kx) * 0.5;
+          const midLY = ky + (py - ky) * 0.5;
+          ctx.beginPath();
+          ctx.moveTo(kx + nx2 * wKnee2, ky + ny2 * wKnee2);
+          ctx.lineTo(midLX - nx2 * 2.0 * s, midLY - ny2 * 2.0 * s);
+          ctx.lineTo(px + nx2 * wAnkle, py + ny2 * wAnkle);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.6, 0.7 * s);
+          ctx.stroke();
+
+          // Circular Ankle Gimbal Ring
+          const ankX = kx + (px - kx) * 0.88;
+          const ankY = ky + (py - ky) * 0.88;
+          ctx.beginPath();
+          ctx.arc(ankX, ankY, 3.4 * s, 0, TWO_PI);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(0.8, 1.0 * s);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(ankX, ankY, 1.4 * s, 0, TWO_PI);
+          ctx.fillStyle = legAcc;
+          ctx.fill();
+
+          // 5. CIRCULAR SPHERICAL RUBBER TERRAIN BUMPER PAW
+          // Outer circular spherical bumper
+          ctx.beginPath();
+          ctx.arc(px, py, 4.4 * s, 0, TWO_PI);
+          ctx.strokeStyle = legLine;
+          ctx.lineWidth = Math.max(1.0, (isNear ? 1.6 : 1.1) * s);
+          ctx.stroke();
+
+          // Inner circular traction tread ring
+          ctx.beginPath();
+          ctx.arc(px, py, 2.4 * s, 0, TWO_PI);
+          ctx.strokeStyle = legAcc;
+          ctx.lineWidth = Math.max(0.7, 0.9 * s);
+          ctx.stroke();
+
+          // Center contact core
+          ctx.beginPath();
+          ctx.arc(px, py, 1.1 * s, 0, TWO_PI);
+          ctx.fillStyle = isNear ? `rgba(56, 189, 248, ${alpha})` : legLine;
+          ctx.fill();
+
+          // Ground impact ring when foot touches ground
+          if (inContact && isNear) {
+            ctx.beginPath();
+            ctx.arc(px, py + 2.0 * s, 6.5 * s, 0, TWO_PI);
+            ctx.strokeStyle = `rgba(20, 184, 166, ${(alpha * 0.35).toFixed(3)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+
+          ctx.restore();
+        }
+
+        // --- RENDER PASS 1: FAR LEGS (Hind-Far, Front-Far) ---
+        drawModularLeg(pMountRearFar.x, pMountRearFar.y, ikRF.kneeX, ikRF.kneeY, pawRF.x, pawRF.y, false, pawRF.inContact);
+        drawModularLeg(pMountFrontFar.x, pMountFrontFar.y, ikFF.kneeX, ikFF.kneeY, pawFF.x, pawFF.y, false, pawFF.inContact);
+
+        // --- RENDER PASS 2: DENSE 3D CAD WIREFRAME CHASSIS ---
+        ctx.save();
+        ctx.strokeStyle = colWireChassis;
+        ctx.lineWidth = Math.max(0.9, 1.2 * s);
+
+        // 8 Transverse Station Bulkheads along the fuselage
+        const stationXs = [46, 35, 22, 8, -6, -20, -35, -46];
+        const stationsNear = [];
+        const stationsFar  = [];
+
+        for (let i = 0; i < stationXs.length; i++) {
+          const stX = stationXs[i] * s;
+          const yTop = -18 * s;
+          const yMid = -2 * s;
+          const yBot = 12 * s;
+
+          const ptTopNear = project(stX, yTop, zNear);
+          const ptMidNear = project(stX, yMid, zNear + 2 * s);
+          const ptBotNear = project(stX, yBot, zNear - 3 * s);
+
+          const ptTopFar  = project(stX, yTop, zFar);
+          const ptMidFar  = project(stX, yMid, zFar - 2 * s);
+          const ptBotFar  = project(stX, yBot, zFar + 3 * s);
+
+          stationsNear.push({ top: ptTopNear, mid: ptMidNear, bot: ptBotNear });
+          stationsFar.push({ top: ptTopFar, mid: ptMidFar, bot: ptBotFar });
+
+          // Transverse bulkhead perimeter loops
+          ctx.beginPath();
+          ctx.moveTo(ptTopNear.x, ptTopNear.y);
+          ctx.lineTo(ptMidNear.x, ptMidNear.y);
+          ctx.lineTo(ptBotNear.x, ptBotNear.y);
+          ctx.lineTo(ptBotFar.x, ptBotFar.y);
+          ctx.lineTo(ptMidFar.x, ptMidFar.y);
+          ctx.lineTo(ptTopFar.x, ptTopFar.y);
+          ctx.closePath();
+          ctx.strokeStyle = (i === 1 || i === 6) ? colNearLine : colWireChassis;
+          ctx.lineWidth = (i === 1 || i === 6) ? Math.max(1.0, 1.4 * s) : Math.max(0.7, 1.0 * s);
+          ctx.stroke();
+
+          // Mid transverse cross-strut
+          ctx.beginPath();
+          ctx.moveTo(ptMidNear.x, ptMidNear.y);
+          ctx.lineTo(ptMidFar.x, ptMidFar.y);
+          ctx.strokeStyle = colNearAccent;
+          ctx.lineWidth = Math.max(0.6, 0.8 * s);
+          ctx.stroke();
+        }
+
+        // Longitudinal CAD Stringers connecting all stations
+        function drawStringer(pts, col, width) {
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            ctx.lineTo(pts[i].x, pts[i].y);
+          }
+          ctx.strokeStyle = col;
+          ctx.lineWidth = width;
+          ctx.stroke();
+        }
+
+        // Near longitudinal lines
+        drawStringer(stationsNear.map(s => s.top), colNearLine, Math.max(1.0, 1.4 * s));
+        drawStringer(stationsNear.map(s => s.mid), colWireChassis, Math.max(0.9, 1.2 * s));
+        drawStringer(stationsNear.map(s => s.bot), colNearAccent, Math.max(0.9, 1.2 * s));
+
+        // Far longitudinal lines (dimmer)
+        drawStringer(stationsFar.map(s => s.top), colFarLine, Math.max(0.7, 0.9 * s));
+        drawStringer(stationsFar.map(s => s.mid), colFarLine, Math.max(0.7, 0.9 * s));
+        drawStringer(stationsFar.map(s => s.bot), colFarLine, Math.max(0.7, 0.9 * s));
+
+        // Diagonal Wireframe Trusses (dense CAD mesh between stations)
         ctx.beginPath();
-        ctx.moveTo(tailBaseX, tailBaseY);
-        ctx.quadraticCurveTo(tailMidX, tailMidY, tailTipX, tailTipY);
+        for (let i = 0; i < stationsNear.length - 1; i++) {
+          ctx.moveTo(stationsNear[i].top.x, stationsNear[i].top.y);
+          ctx.lineTo(stationsFar[i + 1].top.x, stationsFar[i + 1].top.y);
+          ctx.moveTo(stationsNear[i].top.x, stationsNear[i].top.y);
+          ctx.lineTo(stationsNear[i + 1].mid.x, stationsNear[i + 1].mid.y);
+          ctx.moveTo(stationsNear[i].mid.x, stationsNear[i].mid.y);
+          ctx.lineTo(stationsNear[i + 1].bot.x, stationsNear[i + 1].bot.y);
+        }
+        ctx.strokeStyle = `rgba(34, 211, 238, ${(alpha * 0.40).toFixed(3)})`;
+        ctx.lineWidth = Math.max(0.5, 0.7 * s);
         ctx.stroke();
 
-        // Active tail sensor bead
+        // Spot Roll-Cage Tubular Handles on Dorsal Deck
+        const handleNearStart = project(-38 * s, -23 * s, 8 * s);
+        const handleNearEnd   = project(38 * s, -23 * s, 8 * s);
         ctx.beginPath();
-        ctx.arc(tailTipX, tailTipY, 2.4 * s, 0, Math.PI * 2);
-        ctx.fillStyle = cSage;
+        ctx.moveTo(handleNearStart.x, handleNearStart.y);
+        ctx.lineTo(handleNearEnd.x, handleNearEnd.y);
+        const stanchion1 = project(-20 * s, -23 * s, 8 * s);
+        const stanchion1b = project(-20 * s, -18 * s, 8 * s);
+        ctx.moveTo(stanchion1.x, stanchion1.y); ctx.lineTo(stanchion1b.x, stanchion1b.y);
+        const stanchion2 = project(20 * s, -23 * s, 8 * s);
+        const stanchion2b = project(20 * s, -18 * s, 8 * s);
+        ctx.moveTo(stanchion2.x, stanchion2.y); ctx.lineTo(stanchion2b.x, stanchion2b.y);
+        ctx.strokeStyle = colNearLine;
+        ctx.lineWidth = Math.max(1.0, 1.5 * s);
+        ctx.stroke();
+
+        // Internal Battery & Electronics Bay (visible through wireframe)
+        ctx.save();
+        for (let b = 0; b < 4; b++) {
+          const batX = (-16 + b * 11) * s;
+          const ptBat = project(batX, 0, 0);
+          ctx.beginPath();
+          ctx.rect(ptBat.x - 3.5 * s, ptBat.y - 6 * s, 7 * s, 12 * s);
+          ctx.strokeStyle = colInternal;
+          ctx.lineWidth = Math.max(0.6, 0.9 * s);
+          ctx.stroke();
+          ctx.fillStyle = `rgba(16, 185, 129, ${(alpha * 0.35).toFixed(3)})`;
+          ctx.fillRect(ptBat.x - 2.5 * s, ptBat.y - 4 * s, 5 * s, 8 * s);
+        }
+        ctx.restore();
+
+        // 3. REVOLVING 360° LIDAR PUCK ON DORSAL DECK
+        const lidarCenter = project(2 * s, -24 * s, 0);
+        const lidarR = 6.5 * s;
+        const lidarH = 5.0 * s;
+
+        // Cylinder bottom ring
+        ctx.beginPath();
+        ctx.ellipse(lidarCenter.x, lidarCenter.y + lidarH * 0.5, lidarR, lidarR * 0.45, 0, 0, TWO_PI);
+        ctx.strokeStyle = colNearAccent;
+        ctx.lineWidth = Math.max(0.8, 1.1 * s);
+        ctx.stroke();
+
+        // Cylinder top ring
+        ctx.beginPath();
+        ctx.ellipse(lidarCenter.x, lidarCenter.y - lidarH * 0.5, lidarR, lidarR * 0.45, 0, 0, TWO_PI);
+        ctx.strokeStyle = colNearLine;
+        ctx.lineWidth = Math.max(0.9, 1.3 * s);
+        ctx.stroke();
+
+        // Revolving laser scan beam
+        const scanAngle = (time * 0.0055) % TWO_PI;
+        const beamX = lidarCenter.x + Math.cos(scanAngle) * 32 * s;
+        const beamY = lidarCenter.y + Math.sin(scanAngle) * 12 * s;
+        ctx.beginPath();
+        ctx.moveTo(lidarCenter.x, lidarCenter.y - lidarH * 0.5);
+        ctx.lineTo(beamX, beamY);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${(alpha * 0.85).toFixed(3)})`;
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
+
+        // Beam focal dot
+        ctx.beginPath();
+        ctx.arc(beamX, beamY, 2.0 * s, 0, TWO_PI);
+        ctx.fillStyle = `rgba(56, 189, 248, ${alpha})`;
         ctx.fill();
 
-        // Torso Shell Plates (Chassis)
+        // 4. FORWARD SENSOR HEAD / VISOR
+        const nosePt = project(56 * s, -6 * s, 0);
+        const eyeLeftPt  = project(52 * s, -9 * s, -5 * s);
+        const eyeRightPt = project(54 * s, -7 * s, 6 * s);
+
+        // Sensor bezel wireframe
         ctx.beginPath();
-        ctx.moveTo(hipX - 12 * s, hipY - 4 * s);
-        ctx.quadraticCurveTo(midSpineX, midSpineY - 12 * s, shoulderX + 8 * s, shoulderY - 8 * s);
-        ctx.lineTo(shoulderX + 12 * s, shoulderY + 8 * s);
-        ctx.quadraticCurveTo(midSpineX, midSpineY + 10 * s, hipX - 8 * s, hipY + 10 * s);
-        ctx.closePath();
-        ctx.fillStyle = cPlate;
-        ctx.fill();
-        ctx.strokeStyle = cStroke;
-        ctx.lineWidth = 1.4 * s;
+        ctx.moveTo(stationsNear[0].top.x, stationsNear[0].top.y);
+        ctx.lineTo(nosePt.x, nosePt.y - 4 * s);
+        ctx.lineTo(stationsNear[0].bot.x, stationsNear[0].bot.y);
+        ctx.moveTo(stationsFar[0].top.x, stationsFar[0].top.y);
+        ctx.lineTo(nosePt.x, nosePt.y - 4 * s);
+        ctx.lineTo(stationsFar[0].bot.x, stationsFar[0].bot.y);
+        ctx.strokeStyle = colNearLine;
+        ctx.lineWidth = Math.max(1.0, 1.4 * s);
         ctx.stroke();
 
-        // Chassis Seam Lines & Internal Accents
+        // Stereoscopic Camera Eyes (Concentric Circular Sensors)
+        // Left eye
         ctx.beginPath();
-        ctx.moveTo(midSpineX - 16 * s, midSpineY - 6 * s);
-        ctx.lineTo(midSpineX + 18 * s, midSpineY - 3 * s);
-        ctx.strokeStyle = cIce;
-        ctx.lineWidth = 1.2 * s;
+        ctx.arc(eyeLeftPt.x, eyeLeftPt.y, 3.2 * s, 0, TWO_PI);
+        ctx.strokeStyle = colNearAccent;
+        ctx.lineWidth = Math.max(0.8, 1.0 * s);
         ctx.stroke();
-
         ctx.beginPath();
-        ctx.moveTo(midSpineX - 10 * s, midSpineY + 3 * s);
-        ctx.lineTo(midSpineX + 12 * s, midSpineY + 4 * s);
-        ctx.strokeStyle = cHairline;
-        ctx.lineWidth = 0.8 * s;
-        ctx.stroke();
-
-        // Cranial Pod (Head & Sensor Visor)
-        const neckX = shoulderX + 8 * s;
-        const neckY = shoulderY - 6 * s;
-        const headRot = 0.08 * Math.sin(time * 0.0014);
-        const headBaseX = neckX + 14 * s;
-        const headBaseY = neckY - 10 * s + headRot * 10 * s;
-        const snoutX = headBaseX + 24 * s;
-        const snoutY = headBaseY + 6 * s;
-        const craniumX = headBaseX + 4 * s;
-        const craniumY = headBaseY - 10 * s;
-
-        // Neck linkage
-        ctx.beginPath();
-        ctx.moveTo(neckX, neckY);
-        ctx.lineTo(headBaseX, headBaseY);
-        ctx.strokeStyle = cStroke;
-        ctx.lineWidth = 1.6 * s;
-        ctx.stroke();
-
-        // Head Shell
-        ctx.beginPath();
-        ctx.moveTo(headBaseX - 4 * s, headBaseY);
-        ctx.lineTo(craniumX, craniumY);
-        ctx.lineTo(snoutX, snoutY - 2 * s);
-        ctx.lineTo(snoutX - 4 * s, snoutY + 6 * s);
-        ctx.lineTo(headBaseX, headBaseY + 6 * s);
-        ctx.closePath();
-        ctx.fillStyle = cPlate;
-        ctx.fill();
-        ctx.strokeStyle = cStroke;
-        ctx.lineWidth = 1.3 * s;
-        ctx.stroke();
-
-        // Perception Sensor Visor (Glowing Ice/Cyan ocular slot)
-        ctx.beginPath();
-        ctx.moveTo(headBaseX + 10 * s, headBaseY - 4 * s);
-        ctx.lineTo(snoutX - 4 * s, snoutY + 1 * s);
-        ctx.strokeStyle = cIce;
-        ctx.lineWidth = 2.0 * s;
-        ctx.stroke();
-
-        // Glowing visor ocular dot
-        const ocularPhase = 0.5 + 0.5 * Math.sin(time * 0.003);
-        ctx.beginPath();
-        ctx.arc(snoutX - 6 * s, snoutY, 1.8 * s, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(106, 142, 158, ${(ocularPhase * 0.95 * alpha).toFixed(3)})`;
+        ctx.arc(eyeLeftPt.x, eyeLeftPt.y, 1.4 * s, 0, TWO_PI);
+        ctx.fillStyle = `rgba(20, 184, 166, ${alpha})`;
         ctx.fill();
 
-        // Sensor Ears / Antenna Fin
+        // Right eye
         ctx.beginPath();
-        ctx.moveTo(craniumX - 2 * s, craniumY + 2 * s);
-        ctx.lineTo(craniumX - 12 * s, craniumY - 10 * s + 2 * Math.sin(time * 0.002));
-        ctx.lineTo(craniumX + 4 * s, craniumY);
-        ctx.fillStyle = cPlate;
+        ctx.arc(eyeRightPt.x, eyeRightPt.y, 3.4 * s, 0, TWO_PI);
+        ctx.strokeStyle = colNearLine;
+        ctx.lineWidth = Math.max(0.9, 1.3 * s);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(eyeRightPt.x, eyeRightPt.y, 1.5 * s, 0, TWO_PI);
+        ctx.fillStyle = `rgba(56, 189, 248, ${alpha})`;
         ctx.fill();
-        ctx.strokeStyle = cSage;
-        ctx.lineWidth = 1.0 * s;
+
+        // 5. REAR TELEMETRY ANTENNA & BEACON
+        const antBase = project(-44 * s, -17 * s, 0);
+        const antTip  = project(-60 * s, -35 * s, 0);
+        ctx.beginPath();
+        ctx.moveTo(antBase.x, antBase.y);
+        ctx.lineTo(antTip.x, antTip.y);
+        ctx.strokeStyle = colNearLine;
+        ctx.lineWidth = Math.max(1.0, 1.4 * s);
         ctx.stroke();
 
-        // Draw Foreground (Near) Limbs
-        drawLeg(hipX, hipY, false, false, 0);
-        drawLeg(shoulderX, shoulderY, true, false, Math.PI);
+        // Pulsing telemetry broadcast rings
+        const pingR = ((time * 0.024) % 18 + 4) * s;
+        const pingAlpha = (1 - (pingR / s - 4) / 18) * alpha * 0.6;
+        ctx.beginPath();
+        ctx.arc(antTip.x, antTip.y, pingR, Math.PI * 0.75, Math.PI * 1.5);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${pingAlpha.toFixed(3)})`;
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
+
+        ctx.restore();
+
+        // --- RENDER PASS 3: NEAR LEGS (Hind-Near, Front-Near) ---
+        drawModularLeg(pMountRearNear.x, pMountRearNear.y, ikRN.kneeX, ikRN.kneeY, pawRN.x, pawRN.y, true, pawRN.inContact);
+        drawModularLeg(pMountFrontNear.x, pMountFrontNear.y, ikFN.kneeX, ikFN.kneeY, pawFN.x, pawFN.y, true, pawFN.inContact);
 
         return {
-          headX: snoutX - 6 * s,
-          headY: snoutY,
-          spineX: midSpineX,
-          spineY: midSpineY - 10 * s
+          headX: nosePt.x,
+          headY: nosePt.y,
+          rearX: antBase.x,
+          rearY: antBase.y
         };
       }
 
+      let botX = -120;
       let lastTime = performance.now();
 
       function draw(time) {
@@ -1227,28 +1257,28 @@
 
         const isMobile = width < 768;
         const isTablet = width >= 768 && width < 1024;
+        const dt = Math.min((time - lastTime) / 1000, 0.05);
+        lastTime = time;
+
         const globalBreath = 1 + 0.22 * Math.sin(time * 0.0009);
         const maxDist = (isMobile ? 85 : 110) * globalBreath;
 
-        // Right side positioning for Animaloid Bot
-        let botX, botY, botScale, botAlpha;
-        if (isMobile) {
-          botX = width * 0.80;
-          botY = Math.min(height * 0.28, 200);
-          botScale = 0.55;
-          botAlpha = 0.38;
-        } else if (isTablet) {
-          botX = width * 0.78;
-          botY = Math.min(height * 0.38, 330);
-          botScale = 0.82;
-          botAlpha = 0.88;
-        } else {
-          // Desktop: Right side focus
-          botX = width > 1280 ? width * 0.78 : width * 0.75;
-          botY = Math.min(height * 0.42, 360);
-          botScale = 1.1;
-          botAlpha = 0.95;
+        // Quadruped runner configurations (Spot / Go2 dense 3D wireframe)
+        const botScale = isMobile ? 0.85 : (isTablet ? 1.18 : 1.50);
+        const botAlpha = isMobile ? 0.74 : 0.94;
+        const runSpeed = isMobile ? 115 : (isTablet ? 140 : 165); // px / sec
+
+        // Continuous left-to-right progression across screen
+        botX += runSpeed * dt;
+        const botMargin = 220 * botScale;
+        if (botX > width + botMargin) {
+          botX = -botMargin;
         }
+
+        // Run along bottom ground horizon (architectural baseline)
+        const botY = isMobile
+          ? Math.min(height * 0.82, height - 80)
+          : (isTablet ? Math.min(height * 0.80, height - 110) : Math.min(height * 0.78, height - 132));
 
         // Draw Neural Network connecting fibers (right side)
         for (let i = 0; i < nodes.length; i++) {
@@ -1298,8 +1328,8 @@
           n.x += n.vx;
           n.y += n.vy;
 
-          const minX = isMobile ? width * 0.35 : width * 0.48;
-          const maxX = width + 20;
+          const minX = -30;
+          const maxX = width + 30;
           if (n.x < minX) n.vx = Math.abs(n.vx);
           if (n.x > maxX) n.vx = -Math.abs(n.vx);
           if (n.y < -20) n.y = height + 20;
@@ -1327,13 +1357,13 @@
           ctx.fill();
         }
 
-        // Draw Animaloid Companion Robot on the Right Side
+        // Draw 3D Wireframe Quadruped Robot Dog
         const botNodes = drawAnimaloidBot(botX, botY, botScale, botAlpha, time);
 
         // Synaptic neural link from nearest network nodes to robot sensory visor
         if (botNodes && nodes.length > 0) {
           let closestNode = null;
-          let minDist = 220 * botScale;
+          let minDist = 250 * botScale;
           for (let i = 0; i < nodes.length; i++) {
             const dx = nodes[i].x - botNodes.headX;
             const dy = nodes[i].y - botNodes.headY;
@@ -1344,12 +1374,12 @@
             }
           }
           if (closestNode) {
-            const linkAlpha = (1 - minDist / (220 * botScale)) * 0.35 * botAlpha;
+            const linkAlpha = (1 - minDist / (250 * botScale)) * 0.40 * botAlpha;
             ctx.beginPath();
             ctx.moveTo(closestNode.x, closestNode.y);
             ctx.lineTo(botNodes.headX, botNodes.headY);
             ctx.strokeStyle = `rgba(26, 93, 117, ${linkAlpha.toFixed(3)})`;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 1.2;
             ctx.setLineDash([3, 3]);
             ctx.stroke();
             ctx.setLineDash([]);
